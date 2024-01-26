@@ -1,4 +1,6 @@
-﻿namespace DTO
+﻿using Core;
+
+namespace DTO
 {
     public class MetaEntityDTO : ILocalizedEntity
     {
@@ -16,8 +18,7 @@
 
         public string GetLocalizedContent()
         {
-            //TODO implement Localization through LocalizationManager
-            return "";
+            return LocalizationManager.Instance.GetLocalizedString(localizationKey);
         }
     }
 }
