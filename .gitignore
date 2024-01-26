@@ -42,3 +42,4 @@ sysinfo.txt
 # Unity3D Libraries and packages		  #
 # ======================================= #
 /Assets/UnityTestTools*
+Logs
