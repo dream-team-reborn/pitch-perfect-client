@@ -1,5 +1,12 @@
 {
   "dependencies": {
+    "com.trashpandaboy.core": {
+      "version": "https://github.com/trashpandaboy/TPCore.git#0.0.10",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "b47558d59f3cadab9f19a18dcd2fa0ef57f1d2e5"
+    },
     "com.unity.burst": {
       "version": "1.8.9",
       "depth": 1,
