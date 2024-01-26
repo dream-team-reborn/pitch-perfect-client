@@ -43,3 +43,4 @@ sysinfo.txt
 # ======================================= #
 /Assets/UnityTestTools*
 Logs
+Assets/.DS_Store
