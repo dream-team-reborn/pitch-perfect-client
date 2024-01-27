@@ -695,6 +695,7 @@ MonoBehaviour:
   UseSingleton: 1
   _pages:
   - {fileID: 441020721295281810}
+  - {fileID: 5481897596461391040}
   _spritesDatabase: {fileID: 11400000, guid: 1f2e312da948e0c4bbf2d9647eaeca08, type: 2}
 --- !u!1 &6511169993324661799
 GameObject:
@@ -712,7 +713,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &979365041379997795
 RectTransform:
   m_ObjectHideFlags: 0
@@ -808,6 +809,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6436612314949465914}
   - component: {fileID: 3865564795976541960}
+  - component: {fileID: 2405339132025951594}
   m_Layer: 5
   m_Name: CardsHandler
   m_TagString: Untagged
@@ -831,8 +833,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -380.21405, y: 144.76108}
-  m_SizeDelta: {x: -760.428, y: 289.522}
+  m_AnchoredPosition: {x: -450, y: 158}
+  m_SizeDelta: {x: -1200, y: 234}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &3865564795976541960
 MonoBehaviour:
@@ -848,6 +850,32 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _cardPrefab: {fileID: 7914404061503500303, guid: 9934155d14613674680adaa872f6e16d,
     type: 3}
+--- !u!114 &2405339132025951594
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7078898798171684919}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30649d3a9faa99c48a7b1166b86bf2a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
+  m_ChildAlignment: 4
+  m_Spacing: 0
+  m_ChildForceExpandWidth: 1
+  m_ChildForceExpandHeight: 1
+  m_ChildControlWidth: 0
+  m_ChildControlHeight: 0
+  m_ChildScaleWidth: 0
+  m_ChildScaleHeight: 0
+  m_ReverseArrangement: 0
 --- !u!1 &8777167366435621091
 GameObject:
   m_ObjectHideFlags: 0

@@ -6,6 +6,7 @@ namespace PitchPerfect.Utils
     {
         [SerializeField] private Vector3 _endPosition;
         [SerializeField] private float _duration;
+        [SerializeField] private bool _isRelativeToStart;
         [SerializeField] private bool _playOnStart;
         [SerializeField] private bool _isUI;
 
@@ -20,19 +21,26 @@ namespace PitchPerfect.Utils
         void Start()
         {
             _startPosition = _isUI ? (transform as RectTransform).anchoredPosition : transform.position;
-            
+           
             if (_playOnStart)
             {
                 Play();
             }
         }
 
-        public void Play(bool reverse = false)
+        public void Play(bool reverse = false, bool fromCurrentPos = false)
         {
             _play = true;
             _startPlayTime = Time.time;
-            _tweenStartPos = reverse ? _endPosition : _startPosition;
-            _tweenEndPos = reverse ? _startPosition : _endPosition;
+            if (fromCurrentPos)
+            {
+                _tweenStartPos = _isUI ? (transform as RectTransform).anchoredPosition : transform.position;
+            }
+            else
+            {
+                _tweenStartPos = reverse ? GetEndPosition() : _startPosition;
+            }
+            _tweenEndPos = reverse ? _startPosition : GetEndPosition();
         }
 
         public void Stop()
@@ -77,6 +85,23 @@ namespace PitchPerfect.Utils
                     _play = false;
                 }
             }
+        }
+
+        private Vector3 GetEndPosition()
+        {
+            if (_isRelativeToStart)
+            {
+                if (_isUI)
+                {
+                    return (transform as RectTransform).anchoredPosition + (Vector2)_endPosition;
+                }
+                else
+                {
+                    return transform.position + _endPosition;
+                }
+            }
+
+            return _endPosition;
         }
     }
 }
