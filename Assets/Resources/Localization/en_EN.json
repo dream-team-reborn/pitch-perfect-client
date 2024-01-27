@@ -1,4 +1,6 @@
 {
+    "en_EN" : "English",
+    "it_IT" : "Italian",
     "phrase_001" : "A fighting game where you battle with $1 to knock out $2",
     "phrase_002" : "A puzzle game where you match $1",
     "phrase_003" : "An action adventure, survival and $1 taming game with guns",
