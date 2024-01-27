@@ -49,15 +49,6 @@ namespace PitchPerfect.UI
             _phraseText.text = phrase;
         }
 
-        private void AddWord(int id, string word, Color categoryColor)
-        {
-            Debug.Log("Adding word " + word + " at slot " + id);
-            var changedPhrase = GetCurrentFilledPhrase();
-
-            changedPhrase = _phrase.Replace($"${id}", $"<color=#{ColorUtility.ToHtmlStringRGB(categoryColor)}>{word}</color>");
-            _phraseText.text = changedPhrase;
-        }
-
         private string GetCurrentFilledPhrase()
         {
             string phrase = _phrase;
@@ -68,6 +59,7 @@ namespace PitchPerfect.UI
                 {
                     var wordDto = CardDataManager.Instance.GetWordCardById(_wordsInPhrase[i]);
                     var color = Color.red;
+                    Debug.Log("SETTING AT " + (i + 1) + " WORD " + wordDto.GetLocalizedContent());
                     phrase = phrase.Replace($"${i + 1}", $"<color=#{ColorUtility.ToHtmlStringRGB(color)}>{wordDto.GetLocalizedContent()}</color>");
                 }
                 else
@@ -81,18 +73,16 @@ namespace PitchPerfect.UI
         
         private void OnCardSelected(int id)
         {
-            var wordCard = CardDataManager.Instance.GetWordCardById(id);
-            var slotId = 0;
             for (int i = 0; i < _wordsInPhrase.Length; i++)
             {
                 if (_wordsInPhrase[i] < 0)
                 {
                     _wordsInPhrase[i] = id;
-                    slotId = i + 1;
                     break;
                 }
             }
-            AddWord(slotId, wordCard.GetLocalizedContent(), Color.red); //wordCard.CategoryId);
+            
+            _phraseText.text = GetCurrentFilledPhrase();
         }
         
         private void OnCardUnselected(int id)
@@ -103,7 +93,8 @@ namespace PitchPerfect.UI
                     continue;
 
                 _wordsInPhrase[i] = -1;
-                _phraseText.text = _phrase.Replace($"${i + 1}", EMPTY_SPACE);
+                _phraseText.text = GetCurrentFilledPhrase().Replace($"${i + 1}", EMPTY_SPACE);
+                return;
             }
         }
     }
