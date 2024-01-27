@@ -17,7 +17,7 @@ namespace PitchPerfect.Core
 
         public void JoinRoom()
         {
-            
+            UIManager.Instance.Show<UIRoomPage>();
         }
         
         public void LeaveRoom()
@@ -27,7 +27,7 @@ namespace PitchPerfect.Core
 
         public void OnRoomsListJoined()
         {
-            UIManager.Instance.Show<UIRoomsPage>();
+            UIManager.Instance.Show<UIRoomsListPage>();
         }
     }
 }

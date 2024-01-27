@@ -10,14 +10,14 @@ namespace PitchPerfect.UI
         [SerializeField] private GameObject _selectedText;
 
         private int _id;
-        private UIRoomsPage _roomsPage;
+        private UIRoomsListPage _roomsListPage;
 
         public int Id => _id;
         
-        public void Setup(int id, string name, UIRoomsPage roomsPage)
+        public void Setup(int id, string name, UIRoomsListPage roomsListPage)
         {
             _id = id;
-            _roomsPage = roomsPage;
+            _roomsListPage = roomsListPage;
 
             _nameText.text = name;
             Deselect();
@@ -26,7 +26,7 @@ namespace PitchPerfect.UI
         public void OnSelect()
         {
             _selectedText.SetActive(true);
-            _roomsPage.SelectRoom(_id);
+            _roomsListPage.SelectRoom(_id);
         }
 
         public void Deselect()

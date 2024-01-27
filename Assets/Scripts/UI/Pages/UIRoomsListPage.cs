@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace PitchPerfect.UI
 {
-    public class UIRoomsPage : UIPage
+    public class UIRoomsListPage : UIPage
     {
         [SerializeField] private UIRoom _roomPrefab;
         [SerializeField] private Transform _roomsContainer;

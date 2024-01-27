@@ -21,7 +21,7 @@ namespace PitchPerfect.Networking
 
         private void Start()
         {
-            UIManager.Instance.Show<UILoginPage>();
+            //UIManager.Instance.Show<UILoginPage>();
         }
 
         public void RequestLogin(string username)
