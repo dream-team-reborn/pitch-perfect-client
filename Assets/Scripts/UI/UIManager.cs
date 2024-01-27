@@ -9,8 +9,9 @@ namespace PitchPerfect.UI
         [SerializeField] private UIPage[] _pages;
 
         [SerializeField] private SpritesDatabase _spritesDatabase;
-
         public SpritesDatabase SpritesDatabase => _spritesDatabase;
+
+        private UIPage _currentShownPage;
 
         public void Show<T>()
         {
@@ -18,7 +19,12 @@ namespace PitchPerfect.UI
             {
                 if (page is T)
                 {
+                    if (_currentShownPage)
+                    {
+                        _currentShownPage.Hide();
+                    }
                     page.Show();
+                    _currentShownPage = page;
                     return;
                 }
             }
@@ -31,6 +37,7 @@ namespace PitchPerfect.UI
                 if (page is T)
                 {
                     page.Hide();
+                    _currentShownPage = null;
                     return;
                 }
             }

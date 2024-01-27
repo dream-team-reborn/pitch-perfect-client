@@ -24,5 +24,10 @@ namespace PitchPerfect.Core
         {
             
         }
+
+        public void OnRoomsListJoined()
+        {
+            UIManager.Instance.Show<UIRoomsPage>();
+        }
     }
 }
