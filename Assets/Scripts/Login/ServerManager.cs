@@ -1,4 +1,5 @@
 using System.Collections;
+using com.trashpandaboy.core;
 using Newtonsoft.Json;
 using PitchPerfect.Login.DTO;
 using PitchPerfect.UI;
@@ -8,7 +9,7 @@ using WebSocketSharp;
 
 namespace PitchPerfect.Networking
 {
-    public class LoginHandler : MonoBehaviour
+    public class ServerManager : Manager<ServerManager>
     {
         static string POST_LOGIN_ENDPOINT = "http://[2a03:b0c0:3:d0::76d:d001]:8080/login";
         static string GET_WEBSOCKET_CREDENTIALS_ENDPOINT = "http://[2a03:b0c0:3:d0::76d:d001]:8080/ws";
