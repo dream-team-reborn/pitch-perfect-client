@@ -1,5 +1,6 @@
 using com.trashpandaboy.core;
 using PitchPerfect.UI;
+using UnityEngine.SceneManagement;
 
 namespace PitchPerfect.Core
 {
@@ -8,6 +9,7 @@ namespace PitchPerfect.Core
         public void StartGame()
         {
             UIManager.Instance.Show<UIInGamePage>();
+            SceneManager.LoadScene("TheOffice", LoadSceneMode.Additive);
         }
 
         public void EndGame()

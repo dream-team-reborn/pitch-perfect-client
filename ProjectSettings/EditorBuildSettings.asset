@@ -8,4 +8,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Main.unity
     guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: Assets/Scenes/TheOffice.unity
+    guid: 7af67ec0ba9225840838fe27b57e354f
   m_configObjects: {}
