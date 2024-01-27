@@ -2,26 +2,36 @@ using System.Collections;
 using com.trashpandaboy.core;
 using Newtonsoft.Json;
 using PitchPerfect.Login.DTO;
-using PitchPerfect.Networking.Messages;
 using PitchPerfect.UI;
+using PitchPerfect.Core;
 using UnityEngine;
 using UnityEngine.Networking;
 using WebSocketSharp;
+using System.Net.WebSockets;
+using System;
+using System.Threading;
+using System.IO;
+using PitchPerfect.Networking.Messages;
 
 namespace PitchPerfect.Networking
 {
     public class ServerManager : Manager<ServerManager>
     {
         static string POST_LOGIN_ENDPOINT = "http://[2a03:b0c0:3:d0::76d:d001]:8080/login";
+
         static string WEBSOCKET_ENDPOINT = "ws://[2a03:b0c0:3:d0::76d:d001]:8080/ws?token=$";
 
-        WebSocket _webSocket = null;
+        private SocketHandler _socketHandler;
+
+        ClientWebSocket _webSocket = null;
+
+        public ClientWebSocket WebSocket => _webSocket;
+
         AuthorizedUserDTO _authorizedUser = null;
 
         private void Start()
         {
-            //UIManager.Instance.Show<UILoginPage>();
-
+            UIManager.Instance.Show<UILoginPage>();
         }
 
         public void RequestLogin(string username)
@@ -49,35 +59,21 @@ namespace PitchPerfect.Networking
                 {
                     _authorizedUser = JsonConvert.DeserializeObject<AuthorizedUserDTO>(postRequest.downloadHandler.text);
                     Debug.Log($"Retrieved authorized user \n {_authorizedUser}");
-                    OpenWebSocket();
+                    StartCoroutine(OpenClientSocket());
                 }
             }
         }
 
-        private void OpenWebSocket()
+        IEnumerator OpenClientSocket()
         {
-            string endPoint = WEBSOCKET_ENDPOINT.Replace("$", _authorizedUser.Token);
-            Debug.Log("Called OpenWebSocket - EndPoint: " + endPoint);
-            _webSocket = new WebSocket(endPoint);
-            _webSocket.Connect();
-            _webSocket.OnMessage += (sender, e) =>
-            {
-                Debug.Log($"[Server '{((WebSocket)sender).Url}']: {e.Data}");
-            };
+            _socketHandler = new SocketHandler(WEBSOCKET_ENDPOINT.Replace("$",_authorizedUser.Token));
+            ConnectToServer();
+
+            yield break;
 
         }
 
-        private void Update()
-        {
-            if (_webSocket == null)
-            {
-                return;
-            }
-            if (Input.GetKeyDown(KeyCode.S))
-            {
-                _webSocket.Send("Test Echo");
-            }
-        }
+
 
         #region Requests
 
@@ -162,5 +158,49 @@ namespace PitchPerfect.Networking
 
 
         #endregion
+
+
+        /// <summary>
+        /// Unity method called every frame
+        /// </summary>
+        private void Update()
+        {
+            if (_socketHandler == null)
+                return;
+
+            // Check if server send new messages
+            var cqueue = _socketHandler.receiveQueue;
+            string msg;
+            while (cqueue.TryPeek(out msg))
+            {
+                // Parse newly received messages
+                cqueue.TryDequeue(out msg);
+                HandleMessage(msg);
+            }
+        }
+        /// <summary>
+        /// Method responsible for handling server messages
+        /// </summary>
+        /// <param name="msg">Message.</param>
+        private void HandleMessage(string msg)
+        {
+            Debug.Log("Server: " + msg);
+        }
+        /// <summary>
+        /// Call this method to connect to the server
+        /// </summary>
+        public async void ConnectToServer()
+        {
+            await _socketHandler.Connect();
+        }
+        /// <summary>
+        /// Method which sends data through websocket
+        /// </summary>
+        /// <param name="message">Message.</param>
+        public void SendRequest(string message)
+        {
+            _socketHandler.Send(message);
+        }
+
     }
 }

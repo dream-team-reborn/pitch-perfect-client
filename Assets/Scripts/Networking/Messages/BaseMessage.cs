@@ -16,12 +16,21 @@ namespace PitchPerfect.Networking.Messages
         public enum MessageType
         {
             CreateRoom,
-            GetRooms
+            GetRooms,
+            Lapis
         }
 
         public string ConvertToJson()
         {
             return JsonConvert.SerializeObject(this);
+        }
+    }
+
+    public class LapisMessage : BaseMessage
+    {
+        public LapisMessage() : base(MessageType.Lapis)
+        {
+
         }
     }
 }
