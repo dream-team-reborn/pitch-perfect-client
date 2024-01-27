@@ -14,8 +14,10 @@ namespace PitchPerfect.Core
 
         private Dictionary<string, string> loadedLocalizations;
 
-        void Start()
+        protected override void Awake()
         {
+            base.Awake();
+
             loadedLocalizations = new Dictionary<string, string>();
 
             var jsonTextFile = Resources.Load<TextAsset>($"Localization/{DEFAULT_LANGUAGE}");
@@ -36,6 +38,7 @@ namespace PitchPerfect.Core
                 return loadedLocalizations[key];
             }
 
+            Debug.Log("Localization key not found: " + key);
             return MISSING_TRANSLATION;
         }
     }
