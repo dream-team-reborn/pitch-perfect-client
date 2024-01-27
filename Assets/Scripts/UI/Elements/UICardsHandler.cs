@@ -1,6 +1,6 @@
 using PitchPerfect.DTO;
 using UnityEngine;
-using Core;
+using PitchPerfect.Core;
 
 namespace PitchPerfect.UI
 {
