@@ -45,9 +45,13 @@ namespace PitchPerfect.Core
             if (_selectedCards == null)
                 _selectedCards = new List<int>();
 
+            if (_selectedCards.Count == _currentPhrase.PlaceholderAmount)
+            {
+                UnselectCardInHand(_selectedCards[0]);
+            }
+            
             _selectedCards.Add(id);
             OnCardSelected?.Invoke(id);
-            
         }
 
         public void UnselectCardInHand(int id)

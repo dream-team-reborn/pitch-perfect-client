@@ -13,14 +13,14 @@ namespace PitchPerfect.UI
         {
             base.Show();
             List<int> randomIds = new List<int>();
-            while(randomIds.Count < 4)
+            while(randomIds.Count < CardDataManager.CARDS_IN_HAND)
             {
-                int rnd = Random.Range(1, 60);
+                int rnd = Random.Range(1, 61);
                 if (!randomIds.Contains(rnd))
                     randomIds.Add(rnd);
             }
 
-            WordCardDTO[] wc = new WordCardDTO[4];
+            WordCardDTO[] wc = new WordCardDTO[CardDataManager.CARDS_IN_HAND];
             for (int i = 0; i < wc.Length; i++)
             {
                 wc[i] = CardDataManager.Instance.GetWordCardById(randomIds[i]);

@@ -17,7 +17,9 @@ namespace PitchPerfect.UI
             for (int i = 0; i < wordCards.Length; i++)
             {
                 _cards[i] = Instantiate(_cardPrefab, transform);
-                _cards[i].Setup(LocalizationManager.Instance.GetLocalizedString(wordCards[i].LocalizationKey), wordCards[i].CategoryId);
+                _cards[i].Setup(wordCards[i].Id, 
+                    LocalizationManager.Instance.GetLocalizedString(wordCards[i].LocalizationKey), 
+                    wordCards[i].CategoryId);
             }
         }
     }

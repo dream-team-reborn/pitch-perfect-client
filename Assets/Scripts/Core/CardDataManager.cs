@@ -8,6 +8,8 @@ namespace PitchPerfect.Core
 {
     public class CardDataManager : Manager<CardDataManager>
     {
+        public static readonly int CARDS_IN_HAND = 4;
+        
         Dictionary<int, PhraseCardDTO> _phraseCardsWholeList;
         Dictionary<int, WordCardDTO> _wordCardsWholeList;
         Dictionary<int, WordCardCategoryDTO> _cardCategoriesWholeList;

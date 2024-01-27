@@ -595,7 +595,7 @@ PrefabInstance:
     - target: {fileID: 8667207110560134427, guid: ba30c177a6f5a974395a3d67257cb6f0,
         type: 3}
       propertyPath: m_Name
-      value: WorldSpaceUI
+      value: PhraseContainer
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

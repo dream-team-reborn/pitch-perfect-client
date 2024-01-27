@@ -67,8 +67,9 @@ MonoBehaviour:
       m_Calls: []
   m_text: 00:15
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 9796853c37077934fb339fe289c35a35, type: 2}
+  m_sharedMaterial: {fileID: 8908934991269880381, guid: 9796853c37077934fb339fe289c35a35,
+    type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -201,8 +202,9 @@ MonoBehaviour:
       m_Calls: []
   m_text: Sviluppa un videogioco con inerzia ma senza fisica
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 9796853c37077934fb339fe289c35a35, type: 2}
+  m_sharedMaterial: {fileID: 8908934991269880381, guid: 9796853c37077934fb339fe289c35a35,
+    type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -280,7 +282,7 @@ GameObject:
   - component: {fileID: 613320159835559612}
   - component: {fileID: 3313208250978179897}
   m_Layer: 0
-  m_Name: PhraseContainer
+  m_Name: BG
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -357,8 +359,9 @@ GameObject:
   - component: {fileID: 4960537474632826593}
   - component: {fileID: 3426983737179655451}
   - component: {fileID: 3422545040589424172}
+  - component: {fileID: 4814115863449372969}
   m_Layer: 0
-  m_Name: WorldSpaceUI
+  m_Name: PhraseContainer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -447,3 +450,16 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &4814115863449372969
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8667207110560134427}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e2494482b2b925429b25f9fd3f35cae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _phraseText: {fileID: 1718545568522662372}
