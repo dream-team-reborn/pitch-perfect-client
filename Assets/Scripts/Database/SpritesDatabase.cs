@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace PitchPerfect.Database
@@ -6,22 +5,15 @@ namespace PitchPerfect.Database
     [CreateAssetMenu(menuName = "Databases/SpritesDatabase", fileName = "SpritesDatabase")]
     public class SpritesDatabase : ScriptableObject
     {
-        [Serializable]
-        private struct SpriteResource
-        {
-            public int ID;
-            public Sprite Sprite;
-        }
-        
-        [SerializeField] private SpriteResource[] sprites;
+        [SerializeField] private Sprite[] sprites;
 
-        public Sprite GetResource(int id)
+        public Sprite GetResource(string key)
         {
             foreach (var sprite in sprites)
             {
-                if (sprite.ID == id)
+                if (sprite.name == key)
                 {
-                    return sprite.Sprite;
+                    return sprite;
                 }
             }
 

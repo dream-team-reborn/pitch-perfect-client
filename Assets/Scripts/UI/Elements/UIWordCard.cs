@@ -1,4 +1,3 @@
-using System;
 using PitchPerfect.Core;
 using PitchPerfect.Utils;
 using TMPro;
@@ -9,8 +8,10 @@ namespace PitchPerfect.UI
 {
     public class UIWordCard : MonoBehaviour
     {
+        private const string CARD_SPRITE_PREFIX = "card_";
+        
         [SerializeField] private TMP_Text _cardText;
-        [SerializeField] private Image _categoryImage;
+        [SerializeField] private Image _background;
         [SerializeField] private PositionTween _tween;
 
         private int _cardId;
@@ -32,7 +33,7 @@ namespace PitchPerfect.UI
         {
             _cardId = cardId;
             _cardText.text = cardText;
-            _categoryImage.sprite = UIManager.Instance.SpritesDatabase.GetResource(categoryId);
+            _background.sprite = UIManager.Instance.SpritesDatabase.GetResource(CARD_SPRITE_PREFIX + categoryId);
         }
 
         public void HighlightCard()

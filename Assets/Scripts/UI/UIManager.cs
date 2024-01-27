@@ -9,7 +9,9 @@ namespace PitchPerfect.UI
         [SerializeField] private UIPage[] _pages;
 
         [SerializeField] private SpritesDatabase _spritesDatabase;
+        [SerializeField] private ColorsDatabase _colorsDatabase;
         public SpritesDatabase SpritesDatabase => _spritesDatabase;
+        public ColorsDatabase ColorsDatabase => _colorsDatabase;
 
         private UIPage _currentShownPage;
 

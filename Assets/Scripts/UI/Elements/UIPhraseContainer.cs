@@ -58,7 +58,7 @@ namespace PitchPerfect.UI
                 if (_wordsInPhrase[i] >= 0)
                 {
                     var wordDto = CardDataManager.Instance.GetWordCardById(_wordsInPhrase[i]);
-                    var color = Color.red;
+                    var color = UIManager.Instance.ColorsDatabase.GetColor(wordDto.CategoryId);
                     phrase = phrase.Replace($"${i + 1}", $"<color=#{ColorUtility.ToHtmlStringRGB(color)}>{wordDto.GetLocalizedContent()}</color>");
                 }
                 else
