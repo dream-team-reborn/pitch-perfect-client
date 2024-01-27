@@ -56,9 +56,9 @@ namespace PitchPerfect.Core
 
         private void ClearDataDictionaries()
         {
-            _phraseCardsWholeList?.Clear();
-            _wordCardsWholeList?.Clear();
-            _cardCategoriesWholeList?.Clear();
+            _phraseCardsWholeList = new Dictionary<int, PhraseCardDTO>();
+            _wordCardsWholeList = new Dictionary<int, WordCardDTO>();
+            _cardCategoriesWholeList = new Dictionary<int, WordCardCategoryDTO>();
         }
 
         public PhraseCardDTO GetPhraseCardById(int id)

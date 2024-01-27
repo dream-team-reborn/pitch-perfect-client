@@ -2,6 +2,7 @@ using System.Collections;
 using com.trashpandaboy.core;
 using Newtonsoft.Json;
 using PitchPerfect.Login.DTO;
+using PitchPerfect.Networking.Messages;
 using PitchPerfect.UI;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -12,16 +13,15 @@ namespace PitchPerfect.Networking
     public class ServerManager : Manager<ServerManager>
     {
         static string POST_LOGIN_ENDPOINT = "http://[2a03:b0c0:3:d0::76d:d001]:8080/login";
-        static string GET_WEBSOCKET_CREDENTIALS_ENDPOINT = "http://[2a03:b0c0:3:d0::76d:d001]:8080/ws";
-        static string WEBSOCKET_ENDPOINT = "";
+        static string WEBSOCKET_ENDPOINT = "ws://[2a03:b0c0:3:d0::76d:d001]:8080/ws?token=$";
 
         WebSocket _webSocket = null;
         AuthorizedUserDTO _authorizedUser = null;
-        WebSocketCredentialsDTO _webSocketCredentials = null;
 
         private void Start()
         {
             //UIManager.Instance.Show<UILoginPage>();
+
         }
 
         public void RequestLogin(string username)
@@ -49,38 +49,16 @@ namespace PitchPerfect.Networking
                 {
                     _authorizedUser = JsonConvert.DeserializeObject<AuthorizedUserDTO>(postRequest.downloadHandler.text);
                     Debug.Log($"Retrieved authorized user \n {_authorizedUser}");
-                    StartCoroutine(GetCredentials());
-                }
-            }
-        }
-
-        IEnumerator GetCredentials()
-        {
-            Debug.Log("Retrieving websocket credentials...");
-            using (UnityWebRequest getRequest = UnityWebRequest.Get(GET_WEBSOCKET_CREDENTIALS_ENDPOINT))
-            {
-                getRequest.SetRequestHeader("Token", _authorizedUser.Token);
-
-                yield return getRequest.SendWebRequest();
-
-                if (getRequest.result != UnityWebRequest.Result.Success)
-                {
-                    Debug.Log(getRequest.error);
-                }
-                else
-                {
-                    Debug.Log($"Credentials retrieved: \n {getRequest.downloadHandler.text}");
-                    //OpenWebSocket(); - when retrieved credential store them and uncomment
+                    OpenWebSocket();
                 }
             }
         }
 
         private void OpenWebSocket()
         {
-            Debug.Log("Called OpenWebSocket");
-
-            _webSocket = new WebSocket(WEBSOCKET_ENDPOINT);
-            _webSocket.SetCredentials(_webSocketCredentials.Username,_webSocketCredentials.Password, true);
+            string endPoint = WEBSOCKET_ENDPOINT.Replace("$", _authorizedUser.Token);
+            Debug.Log("Called OpenWebSocket - EndPoint: " + endPoint);
+            _webSocket = new WebSocket(endPoint);
             _webSocket.Connect();
             _webSocket.OnMessage += (sender, e) =>
             {
@@ -95,11 +73,94 @@ namespace PitchPerfect.Networking
             {
                 return;
             }
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.S))
             {
                 _webSocket.Send("Test Echo");
             }
         }
 
+        #region Requests
+
+        public void SendListRoom()
+        {
+
+        }
+
+        public void SendJoinRoom(string roomId)
+        {
+
+        }
+
+        public void SendLeaveRoom()
+        {
+
+        }
+
+        public void SendPlayerReady()
+        {
+
+        }
+
+        public void SendCardSelection()
+        {
+
+        }
+
+        public void SendCombinationChoice()
+        {
+
+        }
+
+        #endregion
+
+        #region Responses
+
+        private void HandleRoomListReceived()
+        {
+
+        }
+
+        private void HandleRoomJoined()
+        {
+
+        }
+
+        private void HandleRoomLeft()
+        {
+
+        }
+
+        private void HandleUserJoined()
+        {
+
+        }
+
+        private void HandlePlayerReady()
+        {
+
+        }
+
+        private void HandleMatchStarted()
+        {
+
+        }
+
+        private void HandleTurnStarted()
+        {
+
+        }
+
+        private void HandlePlayerCombinationChoices()
+        {
+
+        }
+
+        private void HandleTurnEnd()
+        {
+
+        }
+
+
+        #endregion
     }
 }
