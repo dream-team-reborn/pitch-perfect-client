@@ -7,6 +7,9 @@ namespace PitchPerfect.Core
 {
     public class MatchDataManager : Manager<MatchDataManager>
     {
+        List<PlayerDTO> _matchPlayers;
+        public List<PlayerDTO> MatchPlayers => _matchPlayers;
+
         PhraseCardDTO _currentPhrase;
         public PhraseCardDTO CurrentPhrase => _currentPhrase;
 
@@ -20,6 +23,7 @@ namespace PitchPerfect.Core
         public Action OnCurrentHandOfCardsUpdated = null;
         public Action<int> OnCardSelected = null;
         public Action<int> OnCardUnselected = null;
+        public Action OnPlayerListUpdated = null;
 
         public void SetCurrentPhrase(PhraseCardDTO phraseDto)
         {
@@ -33,6 +37,15 @@ namespace PitchPerfect.Core
             _currentHandOfCards.AddRange(wordDto);
             ResetSelectedCards();
             OnCurrentHandOfCardsUpdated?.Invoke();
+        }
+
+        public void ReceivedPlayer(PlayerDTO player)
+        {
+            if (_matchPlayers == null)
+                _matchPlayers = new List<PlayerDTO>();
+
+            _matchPlayers.Add(player);
+            OnPlayerListUpdated?.Invoke();
         }
 
         private void ResetSelectedCards()
