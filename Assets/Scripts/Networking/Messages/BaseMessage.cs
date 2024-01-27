@@ -5,7 +5,7 @@ namespace PitchPerfect.Networking.Messages
 {
     public class BaseMessage
     {
-        public MessageType Type => _type;
+        public string Type => _type.ToString();
         private MessageType _type;
 
         public BaseMessage(MessageType type)

@@ -3,8 +3,12 @@ namespace PitchPerfect.Networking.Messages
 {
     public class CreateRoomMessage : BaseMessage
     {
-        public CreateRoomMessage() : base(MessageType.CreateRoom)
+        public string RoomName => _roomName;
+        private string _roomName;
+
+        public CreateRoomMessage(string roomName) : base(MessageType.CreateRoom)
         {
+            _roomName = roomName;
         }
     }
 }
