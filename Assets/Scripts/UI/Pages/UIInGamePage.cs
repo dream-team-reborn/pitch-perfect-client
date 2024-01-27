@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using PitchPerfect.Core;
 using PitchPerfect.DTO;
 using UnityEngine;
 
@@ -10,10 +12,18 @@ namespace PitchPerfect.UI
         public override void Show()
         {
             base.Show();
-            WordCardDTO[] wc = new WordCardDTO[3];
+            List<int> randomIds = new List<int>();
+            while(randomIds.Count < 4)
+            {
+                int rnd = Random.Range(1, 60);
+                if (!randomIds.Contains(rnd))
+                    randomIds.Add(rnd);
+            }
+
+            WordCardDTO[] wc = new WordCardDTO[4];
             for (int i = 0; i < wc.Length; i++)
             {
-                wc[i] = new WordCardDTO(i, $"{i}_card", 0);
+                wc[i] = CardDataManager.Instance.GetWordCardById(randomIds[i]);
             }
             _cardsHandler.PopulateCards(wc);
         }
