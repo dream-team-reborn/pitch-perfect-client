@@ -59,7 +59,6 @@ namespace PitchPerfect.UI
                 {
                     var wordDto = CardDataManager.Instance.GetWordCardById(_wordsInPhrase[i]);
                     var color = Color.red;
-                    Debug.Log("SETTING AT " + (i + 1) + " WORD " + wordDto.GetLocalizedContent());
                     phrase = phrase.Replace($"${i + 1}", $"<color=#{ColorUtility.ToHtmlStringRGB(color)}>{wordDto.GetLocalizedContent()}</color>");
                 }
                 else
