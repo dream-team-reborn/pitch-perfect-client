@@ -1,4 +1,6 @@
 ﻿
+using PitchPerfect.Core;
+
 namespace PitchPerfect.DTO
 {
     public class WordCardDTO : MetaEntityDTO
@@ -6,7 +8,7 @@ namespace PitchPerfect.DTO
         int categoryId;
         public int CategoryId => categoryId;
 
-        public WordCardCategoryDTO Category; //TODO Need to retrieve it from manager
+        public WordCardCategoryDTO Category => CardDataManager.Instance.GetCardCategoryById(categoryId);
 
         public WordCardDTO(int id, string localizationKey, int categoryId) : base(id, localizationKey)
         {
