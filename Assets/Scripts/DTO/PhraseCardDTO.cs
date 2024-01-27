@@ -1,4 +1,4 @@
-﻿namespace DTO
+﻿namespace PitchPerfect.DTO
 {
     public class PhraseCardDTO : MetaEntityDTO
     {

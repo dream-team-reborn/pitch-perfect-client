@@ -1,6 +1,7 @@
-﻿using Core;
+﻿using PitchPerfect.Core;
+using PitchPerfect.Interfaces;
 
-namespace DTO
+namespace PitchPerfect.DTO
 {
     public class MetaEntityDTO : ILocalizedEntity
     {

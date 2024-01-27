@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 using UnityEngine;
 
 
-namespace Core
+namespace PitchPerfect.Core
 {
     public class LocalizationManager : Manager<LocalizationManager>
     {
