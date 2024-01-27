@@ -1,4 +1,5 @@
 using PitchPerfect.DTO;
+using PitchPerfect.Networking;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,11 +18,7 @@ namespace PitchPerfect.UI
         {
             base.Show();
 
-            RoomDTO[] rooms = new RoomDTO[3];
-
-            rooms[0] = new RoomDTO(0, "Paolo");
-            rooms[1] = new RoomDTO(1, "Mario");
-            rooms[2] = new RoomDTO(2, "Gino");
+            RoomDTO[] rooms = ServerManager.Instance.GetRooms();
 
             PopulateRoomsList(rooms);
             _joinButton.interactable = false;

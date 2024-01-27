@@ -1,23 +1,22 @@
 ﻿
+using System;
 using Newtonsoft.Json;
+using PitchPerfect.Networking;
+using Unity.VisualScripting.Dependencies.Sqlite;
 
 namespace PitchPerfect.Networking.Messages
 {
     public class BaseMessage
     {
         public string Type => _type.ToString();
+        
+        [JsonIgnore]
+        public MessageType TypeEnumValue => _type;
         private MessageType _type;
 
         public BaseMessage(MessageType type)
         {
             _type = type;
-        }
-
-        public enum MessageType
-        {
-            CreateRoom,
-            GetRooms,
-            Lapis
         }
 
         public string ConvertToJson()
