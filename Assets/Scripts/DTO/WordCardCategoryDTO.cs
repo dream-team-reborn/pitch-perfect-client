@@ -1,5 +1,5 @@
 ﻿
-namespace DTO
+namespace PitchPerfect.DTO
 {
     public class WordCardCategoryDTO : MetaEntityDTO
     {

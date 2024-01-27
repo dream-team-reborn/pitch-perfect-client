@@ -1,4 +1,4 @@
-using DTO;
+using PitchPerfect.DTO;
 using UnityEngine;
 
 namespace PitchPerfect.UI

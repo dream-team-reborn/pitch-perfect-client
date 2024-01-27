@@ -1,4 +1,7 @@
-﻿public interface ILocalizedEntity
+﻿namespace PitchPerfect.Interfaces
 {
-    public string GetLocalizedContent();
+    public interface ILocalizedEntity
+    {
+        public string GetLocalizedContent();
+    }
 }
