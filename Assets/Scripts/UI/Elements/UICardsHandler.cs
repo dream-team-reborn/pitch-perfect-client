@@ -1,3 +1,4 @@
+using System;
 using PitchPerfect.DTO;
 using UnityEngine;
 using PitchPerfect.Core;
@@ -10,8 +11,20 @@ namespace PitchPerfect.UI
         
         private UIWordCard[] _cards;
 
+        private void Start()
+        {
+            MatchDataManager.Instance.OnPlayerSelectedCardUpdated += OnVoteStarted;
+        }
+
+        private void OnDestroy()
+        {
+            MatchDataManager.Instance.OnPlayerSelectedCardUpdated -= OnVoteStarted;
+        }
+
         public void PopulateCards(WordCardDTO[] wordCards)
         {
+            gameObject.SetActive(true);
+            
             if (_cards != null)
             {
                 foreach (var card in _cards)
@@ -29,6 +42,11 @@ namespace PitchPerfect.UI
                     LocalizationManager.Instance.GetLocalizedString(wordCards[i].LocalizationKey), 
                     wordCards[i].CategoryId);
             }
+        }
+
+        private void OnVoteStarted()
+        {
+            gameObject.SetActive(false);
         }
     }
 }

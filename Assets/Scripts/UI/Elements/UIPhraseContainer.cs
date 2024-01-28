@@ -1,11 +1,9 @@
-using System;
 using System.Linq;
 using PitchPerfect.Core;
 using PitchPerfect.DTO;
 using PitchPerfect.Networking;
 using TMPro;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace PitchPerfect.UI
 {
@@ -34,12 +32,11 @@ namespace PitchPerfect.UI
             MatchDataManager.Instance.OnCardUnselected += OnCardUnselected;
             MatchDataManager.Instance.OnPlayerSelectionToVote += OnSelectionToVote;
 
-            ServerManager.Instance.OnAllUsersSelectedCards += SwitchToVote;
+            MatchDataManager.Instance.OnPlayerSelectedCardUpdated += SwitchToVote;
             ServerManager.Instance.OnAllUsersVoted += SwitchToLeaderboard;
             ServerManager.Instance.OnTurnStart += OnTurnStart;
 
             OnTurnStart();
-            
         }
 
         private void OnDestroy()
@@ -47,8 +44,8 @@ namespace PitchPerfect.UI
             MatchDataManager.Instance.OnCardSelected -= OnCardSelected;
             MatchDataManager.Instance.OnCardUnselected -= OnCardUnselected;
             MatchDataManager.Instance.OnPlayerSelectionToVote -= OnSelectionToVote;
+            MatchDataManager.Instance.OnPlayerSelectedCardUpdated -= SwitchToVote;
 
-            ServerManager.Instance.OnAllUsersSelectedCards -= SwitchToVote;
             ServerManager.Instance.OnAllUsersVoted -= SwitchToLeaderboard;
             ServerManager.Instance.OnTurnStart -= OnTurnStart;
         }
