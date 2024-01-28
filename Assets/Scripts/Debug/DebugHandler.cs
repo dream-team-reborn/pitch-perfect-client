@@ -14,5 +14,10 @@ namespace PitchPerfect.GameDebug
         {
             GameManager.Instance.EndGame();
         }
+
+        public void OnLeaveRoomClick()
+        {
+            GameManager.Instance.LeaveRoom();
+        }
     }
 }

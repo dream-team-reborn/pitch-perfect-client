@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using com.trashpandaboy.core;
 using PitchPerfect.DTO;
+using PitchPerfect.Networking;
 
 namespace PitchPerfect.Core
 {
@@ -32,6 +33,7 @@ namespace PitchPerfect.Core
         public Action<int> OnCardUnselected = null;
         public Action OnPlayerListUpdated = null;
         public Action OnTrendsUpdated = null;
+        public Action OnPlayerSelectedCardUpdated = null;
 
         public void SetCurrentPhrase(PhraseCardDTO phraseDto)
         {
@@ -75,14 +77,14 @@ namespace PitchPerfect.Core
         {
             if (_selectedCards == null)
                 _selectedCards = new List<int>();
-
-            if (_selectedCards.Count == _currentPhrase.PlaceholderAmount)
-            {
-                UnselectCardInHand(_selectedCards[0]);
-            }
             
             _selectedCards.Add(id);
             OnCardSelected?.Invoke(id);
+
+            if(_selectedCards.Count == _currentPhrase.PlaceholderAmount)
+            {
+                ServerManager.Instance.SendCardSelection();
+            }
         }
 
         public void UnselectCardInHand(int id)
@@ -102,6 +104,7 @@ namespace PitchPerfect.Core
             {
                 _playersSelectedCards[kvp.Key] = CardDataManager.Instance.GetWordCardListByIds(kvp.Value);
             }
+            OnPlayerSelectedCardUpdated?.Invoke();
         }
     }
 }

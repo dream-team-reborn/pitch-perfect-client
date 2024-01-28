@@ -44,6 +44,7 @@ namespace PitchPerfect.UI
         private void Start()
         {
             MatchDataManager.Instance.OnTrendsUpdated += OnTrendsUpdated;
+            MatchDataManager.Instance.OnPlayerSelectedCardUpdated += OnPlayerSelectedUpdated;
             
             SwitchTab(true);
         }
@@ -51,6 +52,7 @@ namespace PitchPerfect.UI
         private void OnDestroy()
         {
             MatchDataManager.Instance.OnTrendsUpdated -= OnTrendsUpdated;
+            MatchDataManager.Instance.OnPlayerSelectedCardUpdated -= OnPlayerSelectedUpdated;
         }
 
         private void SwitchTab(bool isTrendTab)
@@ -71,6 +73,11 @@ namespace PitchPerfect.UI
             var trends = MatchDataManager.Instance.CategoryTrends;
             
             
+        }
+
+        private void OnPlayerSelectedUpdated()
+        {
+            SwitchTab(false);
         }
 
         private void SetupTrends(bool fakeTrends = false)
