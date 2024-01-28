@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
@@ -13,7 +14,12 @@ namespace PitchPerfect.UI
         private float _fadeStartT;
         private float _currentFadeT;
         private float _startingAlpha;
-        
+
+        private void Start()
+        {
+            _image.material = new Material(_image.material);
+        }
+
         public void Fade()
         {
             _fade = true;
