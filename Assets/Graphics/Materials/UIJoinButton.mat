@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: UILoginButtonMat
+  m_Name: UIJoinButton
   m_Shader: {fileID: -6465566751694194690, guid: 33b44e0b1d86b4141b681b39f427306c,
     type: 3}
   m_Parent: {fileID: 0}
@@ -59,14 +59,14 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Heigth: 0.22
+    - _Heigth: 0.3
     - _PatternAlpha: 0.08
     - _PatternRotation: 0
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _Radius: 0.02
+    - _Radius: 0.04
     - _Width: 1
     m_Colors:
     - _BaseColor: {r: 0.54901963, g: 0.79215693, b: 0.16470589, a: 1}
-    - _PatternTiling: {r: 8, g: 10, b: 0, a: 0}
+    - _PatternTiling: {r: 8, g: 8, b: 0, a: 0}
   m_BuildTextureStacks: []
