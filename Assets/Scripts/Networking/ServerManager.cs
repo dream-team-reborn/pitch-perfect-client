@@ -52,6 +52,20 @@ namespace PitchPerfect.Networking
 
         IEnumerator SendLoginRequest(string username)
         {
+            using (UnityWebRequest getRequest = UnityWebRequest.Get(CONFIG_ENDPOINT))
+            {
+                yield return getRequest.SendWebRequest();
+
+                if (getRequest.result != UnityWebRequest.Result.Success)
+                {
+                    Debug.Log(getRequest.error);
+                    yield break;
+                }
+                else
+                {
+                    CardDataManager.Instance.OnConfigReceived(getRequest.downloadHandler.text);
+                }
+            }
             Debug.Log("Retrieving authorization token... endpoint: " + POST_LOGIN_ENDPOINT);
             string jsonContent = JsonConvert.SerializeObject(new LoginDTO(username, "").ConvertToJson());
 

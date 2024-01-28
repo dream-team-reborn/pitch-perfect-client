@@ -16,15 +16,15 @@ namespace PitchPerfect.Core
         Dictionary<int, WordCardDTO> _wordCardsWholeList;
         Dictionary<int, WordCardCategoryDTO> _cardCategoriesWholeList;
 
-        protected override void Awake()
-        {
-            base.Awake();
+        //protected override void Awake()
+        //{
+        //    base.Awake();
 
-            //THIS IS TEMPORARY UNITL SERVER SEND US THE CONFIG
-            var tempTextConfig = Resources.Load<TextAsset>("game_configuration");
+        //    //THIS IS TEMPORARY UNITL SERVER SEND US THE CONFIG
+        //    var tempTextConfig = Resources.Load<TextAsset>("game_configuration");
 
-            OnConfigReceived(tempTextConfig.text);
-        }
+        //    OnConfigReceived(tempTextConfig.text);
+        //}
 
         public void OnConfigReceived(string configJson)
         {
