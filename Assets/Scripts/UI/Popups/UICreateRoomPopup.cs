@@ -16,5 +16,10 @@ namespace PitchPerfect.UI
             ServerManager.Instance.SendCreateRoomRequest(_roomNameInput.text);
             Hide();
         }
+
+        public void OnClose()
+        {
+            Hide();
+        }
     }
 }
