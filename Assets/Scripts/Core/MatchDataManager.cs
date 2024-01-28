@@ -110,10 +110,16 @@ namespace PitchPerfect.Core
 
             foreach(var kvp in selectedCards)
             {
-                _playersSelectedCards[kvp.Key] = CardDataManager.Instance.GetWordCardListByIds(kvp.Value);
+                _playersSelectedCards[kvp.Key] = new List<WordCardDTO>();
+                    
+                foreach(var wordId in kvp.Value)
+                {
+                    _playersSelectedCards[kvp.Key].Add(CardDataManager.Instance.GetWordCardById(wordId));
+                }
             }
 
             OnPlayerSelectedCardUpdated?.Invoke();
+            FirstSelectionToVote();
         }
 
         public List<WordCardDTO> GetSelectionToVote()
@@ -125,9 +131,15 @@ namespace PitchPerfect.Core
             _selectionVotes.Add(vote);
             NextSelectionToVote();
         }
+
+        public void FirstSelectionToVote()
+        {
+            OnPlayerSelectionToVote?.Invoke();
+        }
+
         public void NextSelectionToVote()
         {
-            if (_currentSelectionToVote < _playersSelectedCards.Keys.Count)
+            if (_currentSelectionToVote < _playersSelectedCards.Keys.Count - 1)
             {
                 _currentSelectionToVote++;
                 OnPlayerSelectionToVote?.Invoke();

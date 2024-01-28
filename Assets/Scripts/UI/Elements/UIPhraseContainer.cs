@@ -125,6 +125,7 @@ namespace PitchPerfect.UI
         private void OnSelectionToVote()
         {
             var wordList = MatchDataManager.Instance.GetSelectionToVote();
+            Debug.Log($"Selection to vote: {String.Join(",", wordList.Select(o => o.GetLocalizedContent()))}");
 
             _wordsInPhrase = wordList.Select(o => o.Id).ToArray();
 
