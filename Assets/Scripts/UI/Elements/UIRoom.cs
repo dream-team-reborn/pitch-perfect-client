@@ -7,6 +7,7 @@ namespace PitchPerfect.UI
     public class UIRoom : MonoBehaviour
     {
         [SerializeField] private TMP_Text _nameText;
+        [SerializeField] private TMP_Text _playersAmount;
         [SerializeField] private GameObject _selectedText;
 
         private string _id;
@@ -14,11 +15,12 @@ namespace PitchPerfect.UI
 
         public string Id => _id;
         
-        public void Setup(string id, string name, UIRoomsListPage roomsListPage)
+        public void Setup(string id, string name, int playersAmount, UIRoomsListPage roomsListPage)
         {
             _id = id;
             _roomsListPage = roomsListPage;
 
+            _playersAmount.text = playersAmount.ToString();
             _nameText.text = name;
             Deselect();
         }

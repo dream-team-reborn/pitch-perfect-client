@@ -39,7 +39,7 @@ namespace PitchPerfect.UI
             for (int i = 0; i < rooms.Length; i++)
             {
                 var uiRoom = Instantiate(_roomPrefab, _roomsContainer);
-                uiRoom.Setup(rooms[i].Id, rooms[i].Name, this);
+                uiRoom.Setup(rooms[i].Id, rooms[i].Name, rooms[i].Players.Count, this);
                 _rooms[i] = uiRoom;
             }
         }
