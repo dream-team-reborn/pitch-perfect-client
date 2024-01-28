@@ -48,6 +48,32 @@ namespace PitchPerfect.Utils
             _play = false;
         }
 
+        public void SnapToStart()
+        {
+            if (_isUI)
+            {
+                (transform as RectTransform).anchoredPosition = _startPosition;
+            }
+            else
+            {
+                transform.position = _startPosition;
+            }
+        }
+        
+        public void SnapToEnd()
+        {
+            var endPos = GetEndPosition();
+            
+            if (_isUI)
+            {
+                (transform as RectTransform).anchoredPosition = endPos;
+            }
+            else
+            {
+                transform.position = endPos;
+            }
+        }
+
         void Update()
         {
             if (_play)

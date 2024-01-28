@@ -38,11 +38,17 @@ namespace PitchPerfect.UI
 
         public void HighlightCard()
         {
+            if (_isSelected)
+                return;
+            
             _tween.Play();
         }
 
         public void LowlightCard()
         {
+            if (_isSelected)
+                return;
+            
             _tween.Play(true, true);
         }
 
@@ -64,6 +70,7 @@ namespace PitchPerfect.UI
                 return;
 
             _isSelected = true;
+            _tween.SnapToEnd();
         }
         
         private void OnCardUnselected(int id)
@@ -72,6 +79,7 @@ namespace PitchPerfect.UI
                 return;
 
             _isSelected = false;
+            _tween.SnapToStart();
         }
     }
 }
