@@ -29,13 +29,13 @@ namespace PitchPerfect.Networking
             _socketHandler.Dispose();
         }
 
-        static string CONFIG_ENDPOINT = "http://[2a03:b0c0:3:d0::76d:d001]:8080/config";
+        static string CONFIG_ENDPOINT = "http://157.245.23.196:8080/config";
         static string CONFIG_ENDPOINT_LOCAL = "http://192.168.1.201:8080/config";
 
-        static string POST_LOGIN_ENDPOINT = "http://[2a03:b0c0:3:d0::76d:d001]:8080/login";
+        static string POST_LOGIN_ENDPOINT = "http://157.245.23.196:8080/login";
         static string POST_LOGIN_ENDPOINT_LOCAL = "http://192.168.1.201:8080/login";
 
-        static string WEBSOCKET_ENDPOINT = "ws://[2a03:b0c0:3:d0::76d:d001]:8080/ws?token=$";
+        static string WEBSOCKET_ENDPOINT = "ws://157.245.23.196:8080/ws?token=$";
         static string WEBSOCKET_ENDPOINT_LOCAL = "ws://192.168.1.201:8080/ws?token=$";
 
         private SocketHandler _socketHandler;
