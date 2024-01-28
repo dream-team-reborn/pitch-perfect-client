@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using PitchPerfect.Core;
 using PitchPerfect.DTO;
+using PitchPerfect.Networking;
 using UnityEngine;
 
 namespace PitchPerfect.UI
@@ -9,23 +10,22 @@ namespace PitchPerfect.UI
     {
         [SerializeField] private UICardsHandler _cardsHandler;
 
-        public override void Show()
+        private void Awake()
         {
-            base.Show();
-            List<int> randomIds = new List<int>();
-            while(randomIds.Count < CardDataManager.CARDS_IN_HAND)
-            {
-                int rnd = Random.Range(1, 61);
-                if (!randomIds.Contains(rnd))
-                    randomIds.Add(rnd);
-            }
+            ServerManager.Instance.OnTurnStart += OnTurnStart;
 
-            WordCardDTO[] wc = new WordCardDTO[CardDataManager.CARDS_IN_HAND];
-            for (int i = 0; i < wc.Length; i++)
-            {
-                wc[i] = CardDataManager.Instance.GetWordCardById(randomIds[i]);
-            }
-            _cardsHandler.PopulateCards(wc);
+            OnTurnStart();
+        }
+
+        private void OnTurnStart()
+        {
+            _cardsHandler.PopulateCards(MatchDataManager.Instance.CurrentHandOfCards.ToArray());
+        }
+
+        private void OnDisable()
+        {
+
+            ServerManager.Instance.OnTurnStart -= OnTurnStart;
         }
     }
 }
