@@ -254,7 +254,7 @@ namespace PitchPerfect.Networking
             MatchDataManager.Instance.ReceivedPlayersSelection(selectedCards);
         }
 
-        private void HandleTurnEnd()
+        private void HandleTurnEnd(string msg)
         {
             TurnEndedResponse response = JsonConvert.DeserializeObject<TurnEndedResponse>(msg);
             Debug.Log($"HandleTurnEnd - LastTurn: {response.LastTurn}");
