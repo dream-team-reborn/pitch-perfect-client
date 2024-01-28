@@ -10,10 +10,10 @@ namespace PitchPerfect.UI
         [SerializeField] private TMP_Text _nameText;
         [SerializeField] private GameObject _readyText;
         
-        private int _id;
-        public int Id => _id;
+        private string _id;
+        public string Id => _id;
 
-        public void Setup(int id, string username)
+        public void Setup(string id, string username)
         {
             _id = id;
             _nameText.text = username;

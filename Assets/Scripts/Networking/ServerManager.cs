@@ -12,6 +12,11 @@ using System;
 using System.Threading;
 using System.IO;
 using PitchPerfect.Networking.Messages;
+using PitchPerfect.Networking.Responses;
+using static PitchPerfect.Networking.Messages.BaseMessage;
+using PitchPerfect.DTO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace PitchPerfect.Networking
 {
@@ -20,14 +25,14 @@ namespace PitchPerfect.Networking
         static string POST_LOGIN_ENDPOINT = "http://[2a03:b0c0:3:d0::76d:d001]:8080/login";
 
         static string WEBSOCKET_ENDPOINT = "ws://[2a03:b0c0:3:d0::76d:d001]:8080/ws?token=$";
+        //static string WEBSOCKET_ENDPOINT = "ws://192.168.1.201:8080/ws?token=$";
 
         private SocketHandler _socketHandler;
 
-        ClientWebSocket _webSocket = null;
-
-        public ClientWebSocket WebSocket => _webSocket;
-
         AuthorizedUserDTO _authorizedUser = null;
+
+        List<RoomDTO> _rooms = new List<RoomDTO>();
+        RoomDTO _joinedRoom = null;
 
         private void Start()
         {
@@ -68,23 +73,38 @@ namespace PitchPerfect.Networking
         {
             _socketHandler = new SocketHandler(WEBSOCKET_ENDPOINT.Replace("$",_authorizedUser.Token));
             ConnectToServer();
-
+            StartCoroutine(RetrieveRoomList());
             yield break;
-
         }
 
-
+        IEnumerator RetrieveRoomList()
+        {
+            Debug.Log("RetrieveRoomList");
+            if (!_socketHandler.IsConnectionOpen())
+            {
+                yield return new WaitForSeconds(0.1f);
+                StartCoroutine(RetrieveRoomList());
+                yield break;
+            }
+            
+            Debug.Log("RetrieveRoomList - IsConnectionOpen: " + _socketHandler.IsConnectionOpen());
+            SendListRoomRequest();
+        }
 
         #region Requests
 
-        public void SendListRoom()
+        public void SendListRoomRequest()
         {
-
+            string message = new GetRoomsMessage().ConvertToJson();
+            Debug.Log("Sending message: " + message);
+            _socketHandler.Send(message);
         }
 
         public void SendJoinRoom(string roomId)
         {
-
+            string message = new JoinRoomMessage(roomId).ConvertToJson();
+            Debug.Log("Sending message: " + message);
+            _socketHandler.Send(message);
         }
 
         public void SendLeaveRoom()
@@ -111,13 +131,23 @@ namespace PitchPerfect.Networking
 
         #region Responses
 
-        private void HandleRoomListReceived()
+        private void HandleRoomListReceived(string msg)
         {
+            GetRoomsResponse response = JsonConvert.DeserializeObject<GetRoomsResponse>(msg);
+
+            _rooms = response.Rooms.Select(o => o.ConvertToDTO()).ToList();
+
+            GameManager.Instance.OnRoomsListJoined();
 
         }
 
-        private void HandleRoomJoined()
+        private void HandleRoomJoined(string msg)
         {
+            JoinRoomResponse response = JsonConvert.DeserializeObject<JoinRoomResponse>(msg);
+            Debug.Log($"HandleRoomJoined - Result: {response.Result}");
+
+            if (response.Result)
+                GameManager.Instance.JoinRoom();
 
         }
 
@@ -184,8 +214,28 @@ namespace PitchPerfect.Networking
         /// <param name="msg">Message.</param>
         private void HandleMessage(string msg)
         {
-            Debug.Log("Server: " + msg);
+            Debug.Log($"HandleMessage: {msg}");
+            DispatchMessage(msg);
         }
+
+        private void DispatchMessage(string msg)
+        {
+            BaseResponse baseMsg = JsonConvert.DeserializeObject<BaseResponse>(msg);
+            Debug.Log($"DispatchMessage: {baseMsg}");
+            MessageType type = (MessageType)Enum.Parse(typeof(MessageType), baseMsg.Type);
+            switch (type)
+            {
+                case MessageType.GetRooms:
+                    Debug.Log($"DispatchMessage MessageType.GetRooms case...");
+                    HandleRoomListReceived(msg);
+                    break;
+                case MessageType.JoinRoom:
+                    Debug.Log($"DispatchMessage MessageType.JoinRoom case...");
+                    HandleRoomJoined(msg);
+                    break;
+            }
+        }
+
         /// <summary>
         /// Call this method to connect to the server
         /// </summary>
@@ -202,5 +252,14 @@ namespace PitchPerfect.Networking
             _socketHandler.Send(message);
         }
 
+        public RoomDTO[] GetRooms()
+        {
+            return _rooms.ToArray();
+        }
+
+        public RoomDTO GetJoinedRoom()
+        {
+            return _joinedRoom;
+        }
     }
 }

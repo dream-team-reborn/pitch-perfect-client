@@ -1,4 +1,5 @@
 using PitchPerfect.DTO;
+using PitchPerfect.Networking;
 using UnityEngine;
 
 namespace PitchPerfect.UI
@@ -14,13 +15,7 @@ namespace PitchPerfect.UI
         {
             base.Show();
 
-            PlayerDTO[] players = new PlayerDTO[3];
-
-            players[0] = new PlayerDTO(0, "Paolo");
-            players[1] = new PlayerDTO(1, "Mario");
-            players[2] = new PlayerDTO(2, "Gino");
-
-            PopulatePlayersList(players);
+            PopulatePlayersList(ServerManager.Instance.GetJoinedRoom().Players.ToArray());
         }
         
         public void PopulatePlayersList(PlayerDTO[] players)
