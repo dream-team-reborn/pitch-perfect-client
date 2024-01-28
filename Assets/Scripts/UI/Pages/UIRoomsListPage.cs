@@ -9,7 +9,6 @@ namespace PitchPerfect.UI
     {
         [SerializeField] private UIRoom _roomPrefab;
         [SerializeField] private Transform _roomsContainer;
-        [SerializeField] private Button _joinButton;
 
         private UIRoom[] _rooms;
         private string _selectedRoomID = string.Empty;
@@ -21,7 +20,6 @@ namespace PitchPerfect.UI
             RoomDTO[] rooms = ServerManager.Instance.GetRooms();
 
             PopulateRoomsList(rooms);
-            _joinButton.interactable = false;
         }
 
         public void PopulateRoomsList(RoomDTO[] rooms)
@@ -58,11 +56,13 @@ namespace PitchPerfect.UI
             }
 
             _selectedRoomID = roomToSelect;
-            _joinButton.interactable = true;
         }
 
         public void OnJoin()
         {
+            if (string.IsNullOrEmpty(_selectedRoomID))
+                return;
+            
             ServerManager.Instance.SendJoinRoom(_selectedRoomID);
         }
 
