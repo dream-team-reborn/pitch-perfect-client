@@ -1,5 +1,7 @@
+using System.Collections;
 using com.trashpandaboy.core;
 using PitchPerfect.UI;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace PitchPerfect.Core
@@ -8,14 +10,34 @@ namespace PitchPerfect.Core
     {
         public void StartGame()
         {
-            UIManager.Instance.Show<UIInGamePage>();
-            SceneManager.LoadScene("TheOffice", LoadSceneMode.Additive);
+            UIManager.Instance.Fader.Fade();
+            StartCoroutine(LoadOffice());
         }
 
         public void EndGame()
         {
+            UIManager.Instance.Fader.Fade();
+            StartCoroutine(UnloadOffice());
+        }
+
+        private IEnumerator LoadOffice()
+        {
+            var asyncOperation = SceneManager.LoadSceneAsync("TheOffice", LoadSceneMode.Additive);
+            
+            yield return new WaitUntil(() => asyncOperation.isDone);
+            
+            UIManager.Instance.Show<UIInGamePage>();
+            UIManager.Instance.Fader.Fade();
+        }
+        
+        private IEnumerator UnloadOffice()
+        {
+            var asyncOperation = SceneManager.UnloadSceneAsync("TheOffice");
+            
+            yield return new WaitUntil(() => asyncOperation.isDone);
+            
             UIManager.Instance.Hide<UIInGamePage>();
-            SceneManager.UnloadSceneAsync("TheOffice");
+            UIManager.Instance.Fader.Fade();
         }
 
         public void JoinRoom()

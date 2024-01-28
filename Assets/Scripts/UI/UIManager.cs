@@ -8,8 +8,10 @@ namespace PitchPerfect.UI
     {
         [SerializeField] private UIPage[] _pages;
 
+        [SerializeField] private UIFader _fader;
         [SerializeField] private SpritesDatabase _spritesDatabase;
         [SerializeField] private ColorsDatabase _colorsDatabase;
+        public UIFader Fader => _fader;
         public SpritesDatabase SpritesDatabase => _spritesDatabase;
         public ColorsDatabase ColorsDatabase => _colorsDatabase;
 
