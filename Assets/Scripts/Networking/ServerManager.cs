@@ -25,6 +25,7 @@ namespace PitchPerfect.Networking
         private SocketHandler _socketHandler;
 
         AuthorizedUserDTO _authorizedUser = null;
+        public AuthorizedUserDTO Player => _authorizedUser;
 
         List<RoomDTO> _rooms = new List<RoomDTO>();
         RoomDTO _joinedRoom = null;
