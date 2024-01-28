@@ -862,7 +862,6 @@ MonoBehaviour:
   _roomPrefab: {fileID: 3269199942404708945, guid: 657677a434f969640b3b697cbd2fcb47,
     type: 3}
   _roomsContainer: {fileID: 6607300220701520525}
-  _joinButton: {fileID: 8317846593917700201}
 --- !u!1 &1988625990764639268
 GameObject:
   m_ObjectHideFlags: 0
@@ -2135,7 +2134,7 @@ RectTransform:
   m_Father: {fileID: 1904964294253982276}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 0.9999998}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -2537,7 +2536,7 @@ MonoBehaviour:
   m_Content: {fileID: 6607300220701520525}
   m_Horizontal: 0
   m_Vertical: 1
-  m_MovementType: 2
+  m_MovementType: 1
   m_Elasticity: 0.1
   m_Inertia: 1
   m_DecelerationRate: 0.135
@@ -2546,7 +2545,7 @@ MonoBehaviour:
   m_HorizontalScrollbar: {fileID: 0}
   m_VerticalScrollbar: {fileID: 6316948370209703282}
   m_HorizontalScrollbarVisibility: 2
-  m_VerticalScrollbarVisibility: 2
+  m_VerticalScrollbarVisibility: 1
   m_HorizontalScrollbarSpacing: -3
   m_VerticalScrollbarSpacing: -3
   m_OnValueChanged:
@@ -2697,6 +2696,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6607300220701520525}
   - component: {fileID: 2007060596627029471}
+  - component: {fileID: 7834163177191031162}
   m_Layer: 5
   m_Name: Content
   m_TagString: Untagged
@@ -2720,8 +2720,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.000091552734}
-  m_SizeDelta: {x: 0, y: 300}
+  m_AnchoredPosition: {x: 0, y: 0.00012723}
+  m_SizeDelta: {x: -14.977, y: 20}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &2007060596627029471
 MonoBehaviour:
@@ -2740,7 +2740,7 @@ MonoBehaviour:
     m_Right: 0
     m_Top: 20
     m_Bottom: 0
-  m_ChildAlignment: 0
+  m_ChildAlignment: 1
   m_Spacing: 20
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 1
@@ -2749,6 +2749,20 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &7834163177191031162
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5638867709146888654}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_HorizontalFit: 0
+  m_VerticalFit: 2
 --- !u!1 &5667380109920041848
 GameObject:
   m_ObjectHideFlags: 0
@@ -5257,18 +5271,6 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 858888999065016110}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &8317846593917700201 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8684505331875356487, guid: c3f8fd6a42aba40459016317c61af2d1,
-    type: 3}
-  m_PrefabInstance: {fileID: 858888999065016110}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &998283070623535131
 PrefabInstance:
   m_ObjectHideFlags: 0
