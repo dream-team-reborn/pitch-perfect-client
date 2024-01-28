@@ -17,10 +17,26 @@ namespace PitchPerfect.Networking
 {
     public class ServerManager : Manager<ServerManager>
     {
+        [SerializeField]
+        public bool UseLocal = false;
+
+        private void OnDisable()
+        {
+            if(_socketHandler.IsConnectionOpen())
+            {
+                SendLeaveRoom();
+            }
+            _socketHandler.Dispose();
+        }
+
+        static string CONFIG_ENDPOINT = "http://[2a03:b0c0:3:d0::76d:d001]:8080/config";
+        static string CONFIG_ENDPOINT_LOCAL = "http://192.168.1.201:8080/config";
+
         static string POST_LOGIN_ENDPOINT = "http://[2a03:b0c0:3:d0::76d:d001]:8080/login";
+        static string POST_LOGIN_ENDPOINT_LOCAL = "http://192.168.1.201:8080/login";
 
         static string WEBSOCKET_ENDPOINT = "ws://[2a03:b0c0:3:d0::76d:d001]:8080/ws?token=$";
-        //static string WEBSOCKET_ENDPOINT = "ws://192.168.1.201:8080/ws?token=$";
+        static string WEBSOCKET_ENDPOINT_LOCAL = "ws://192.168.1.201:8080/ws?token=$";
 
         private SocketHandler _socketHandler;
 
@@ -52,7 +68,7 @@ namespace PitchPerfect.Networking
 
         IEnumerator SendLoginRequest(string username)
         {
-            using (UnityWebRequest getRequest = UnityWebRequest.Get(CONFIG_ENDPOINT))
+            using (UnityWebRequest getRequest = UnityWebRequest.Get(UseLocal ? CONFIG_ENDPOINT_LOCAL : CONFIG_ENDPOINT))
             {
                 yield return getRequest.SendWebRequest();
 
@@ -69,7 +85,7 @@ namespace PitchPerfect.Networking
             Debug.Log("Retrieving authorization token... endpoint: " + POST_LOGIN_ENDPOINT);
             string jsonContent = JsonConvert.SerializeObject(new LoginDTO(username, "").ConvertToJson());
 
-            using (UnityWebRequest postRequest = UnityWebRequest.Post(POST_LOGIN_ENDPOINT, jsonContent, "application/json"))
+            using (UnityWebRequest postRequest = UnityWebRequest.Post(UseLocal ? POST_LOGIN_ENDPOINT_LOCAL : POST_LOGIN_ENDPOINT, jsonContent, "application/json"))
             {
                 yield return postRequest.SendWebRequest();
 
@@ -88,7 +104,8 @@ namespace PitchPerfect.Networking
 
         IEnumerator OpenClientSocket()
         {
-            _socketHandler = new SocketHandler(WEBSOCKET_ENDPOINT.Replace("$",_authorizedUser.Token));
+            string endPoint = UseLocal ? WEBSOCKET_ENDPOINT_LOCAL : WEBSOCKET_ENDPOINT;
+            _socketHandler = new SocketHandler(endPoint.Replace("$",_authorizedUser.Token));
             ConnectToServer();
             StartCoroutine(RetrieveRoomList());
             yield break;
