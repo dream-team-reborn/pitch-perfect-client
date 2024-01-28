@@ -34,11 +34,6 @@ namespace PitchPerfect.UI
             PhraseCardDTO phraseCardDto = MatchDataManager.Instance.CurrentPhrase;
             ServerManager.Instance.OnAllUsersSelectedCards += SwitchToVote;
             ServerManager.Instance.OnAllUsersVoted += SwitchToLeaderboard;
-
-            int rnd = Random.Range(1, 21);
-            var phraseCardDto = CardDataManager.Instance.GetPhraseCardById(rnd);
-            
-            MatchDataManager.Instance.SetCurrentPhrase(phraseCardDto);
             
             SwitchToCardSelection();
             Setup(phraseCardDto.GetLocalizedContent(), phraseCardDto.PlaceholderAmount);
