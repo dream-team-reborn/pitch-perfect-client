@@ -12,7 +12,7 @@ namespace PitchPerfect.UI
         [SerializeField] private Button _joinButton;
 
         private UIRoom[] _rooms;
-        private int _selectedRoomID = -1;
+        private string _selectedRoomID = string.Empty;
         
         public override void Show()
         {
@@ -44,7 +44,7 @@ namespace PitchPerfect.UI
             }
         }
 
-        public void SelectRoom(int roomToSelect)
+        public void SelectRoom(string roomToSelect)
         {
             if (_selectedRoomID == roomToSelect)
                 return;
@@ -63,7 +63,7 @@ namespace PitchPerfect.UI
 
         public void OnJoin()
         {
-            
+            ServerManager.Instance.SendJoinRoom(_selectedRoomID);
         }
     }
 }

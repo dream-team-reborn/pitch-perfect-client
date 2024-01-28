@@ -4,6 +4,7 @@ namespace PitchPerfect.Networking
     {
         CreateRoom,
         GetRooms,
+        JoinRoom,
         Lapis
     }
 }

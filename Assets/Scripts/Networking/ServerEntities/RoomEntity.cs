@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using PitchPerfect.DTO;
 
 namespace PitchPerfect.Networking.ServerEntities
@@ -11,7 +12,7 @@ namespace PitchPerfect.Networking.ServerEntities
 
         public RoomDTO ConvertToDTO()
         {
-            return new RoomDTO(ID, Name);
+            return new RoomDTO(ID, Name, Players.Select(o => o.ConvertToDTO()).ToList());
         }
     }
 }

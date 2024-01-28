@@ -32,6 +32,7 @@ namespace PitchPerfect.Networking
         AuthorizedUserDTO _authorizedUser = null;
 
         List<RoomDTO> _rooms = new List<RoomDTO>();
+        RoomDTO _joinedRoom = null;
 
         private void Start()
         {
@@ -101,7 +102,9 @@ namespace PitchPerfect.Networking
 
         public void SendJoinRoom(string roomId)
         {
-
+            string message = new JoinRoomMessage(roomId).ConvertToJson();
+            Debug.Log("Sending message: " + message);
+            _socketHandler.Send(message);
         }
 
         public void SendLeaveRoom()
@@ -138,8 +141,13 @@ namespace PitchPerfect.Networking
 
         }
 
-        private void HandleRoomJoined()
+        private void HandleRoomJoined(string msg)
         {
+            JoinRoomResponse response = JsonConvert.DeserializeObject<JoinRoomResponse>(msg);
+            Debug.Log($"HandleRoomJoined - Result: {response.Result}");
+
+            if (response.Result)
+                GameManager.Instance.JoinRoom();
 
         }
 
@@ -213,12 +221,17 @@ namespace PitchPerfect.Networking
         private void DispatchMessage(string msg)
         {
             BaseResponse baseMsg = JsonConvert.DeserializeObject<BaseResponse>(msg);
+            Debug.Log($"DispatchMessage: {baseMsg}");
             MessageType type = (MessageType)Enum.Parse(typeof(MessageType), baseMsg.Type);
             switch (type)
             {
                 case MessageType.GetRooms:
                     Debug.Log($"DispatchMessage MessageType.GetRooms case...");
                     HandleRoomListReceived(msg);
+                    break;
+                case MessageType.JoinRoom:
+                    Debug.Log($"DispatchMessage MessageType.JoinRoom case...");
+                    HandleRoomJoined(msg);
                     break;
             }
         }
@@ -241,7 +254,12 @@ namespace PitchPerfect.Networking
 
         public RoomDTO[] GetRooms()
         {
+            return _rooms.ToArray();
+        }
 
+        public RoomDTO GetJoinedRoom()
+        {
+            return _joinedRoom;
         }
     }
 }

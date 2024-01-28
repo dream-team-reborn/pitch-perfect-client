@@ -9,12 +9,12 @@ namespace PitchPerfect.UI
         [SerializeField] private TMP_Text _nameText;
         [SerializeField] private GameObject _selectedText;
 
-        private int _id;
+        private string _id;
         private UIRoomsListPage _roomsListPage;
 
-        public int Id => _id;
+        public string Id => _id;
         
-        public void Setup(int id, string name, UIRoomsListPage roomsListPage)
+        public void Setup(string id, string name, UIRoomsListPage roomsListPage)
         {
             _id = id;
             _roomsListPage = roomsListPage;
