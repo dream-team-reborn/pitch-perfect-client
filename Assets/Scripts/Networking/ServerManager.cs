@@ -267,6 +267,9 @@ namespace PitchPerfect.Networking
                     Debug.Log($"DispatchMessage {type} case...");
                     HandleTurnStarted(msg);
                     break;
+                case MessageType.CreateRoom:
+                    SendListRoomRequest();
+                    break;
             }
         }
 

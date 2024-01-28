@@ -7,6 +7,7 @@ namespace PitchPerfect.UI
     public class UIManager : Manager<UIManager>
     {
         [SerializeField] private UIPage[] _pages;
+        [SerializeField] private UIPopup[] _popups;
 
         [SerializeField] private UIFader _fader;
         [SerializeField] private SpritesDatabase _spritesDatabase;
@@ -32,6 +33,15 @@ namespace PitchPerfect.UI
                     return;
                 }
             }
+            
+            foreach (var popup in _popups)
+            {
+                if (popup is T)
+                {
+                    popup.Show();
+                    return;
+                }
+            }
         }
 
         public void Hide<T>()
@@ -42,6 +52,15 @@ namespace PitchPerfect.UI
                 {
                     page.Hide();
                     _currentShownPage = null;
+                    return;
+                }
+            }
+            
+            foreach (var popup in _popups)
+            {
+                if (popup is T)
+                {
+                    popup.Hide();
                     return;
                 }
             }

@@ -65,5 +65,10 @@ namespace PitchPerfect.UI
         {
             ServerManager.Instance.SendJoinRoom(_selectedRoomID);
         }
+
+        public void OnCreateRoom()
+        {
+            UIManager.Instance.Show<UICreateRoomPopup>();
+        }
     }
 }

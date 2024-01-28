@@ -59,7 +59,7 @@ namespace PitchPerfect.Core
         
         public void LeaveRoom()
         {
-            
+            UIManager.Instance.Show<UIRoomsListPage>();
         }
 
         public void OnRoomsListJoined()
