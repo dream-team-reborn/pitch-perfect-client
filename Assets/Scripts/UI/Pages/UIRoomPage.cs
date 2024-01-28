@@ -15,7 +15,16 @@ namespace PitchPerfect.UI
         {
             base.Show();
 
-            PopulatePlayersList(ServerManager.Instance.GetJoinedRoom().Players.ToArray());
+            PlayerDTO[] players = new PlayerDTO[0];
+            RoomDTO roomJoined = ServerManager.Instance.GetJoinedRoom();
+            if(roomJoined != null)
+            {
+                if(roomJoined.Players != null)
+                {
+                    players = roomJoined.Players.ToArray();
+                }
+            }
+            PopulatePlayersList(players);
         }
         
         public void PopulatePlayersList(PlayerDTO[] players)
@@ -40,7 +49,7 @@ namespace PitchPerfect.UI
 
         public void OnReady()
         {
-            
+            ServerManager.Instance.SendPlayerReady();
         }
     }
 }
