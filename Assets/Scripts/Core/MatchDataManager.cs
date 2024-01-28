@@ -124,7 +124,8 @@ namespace PitchPerfect.Core
 
         public List<WordCardDTO> GetSelectionToVote()
         {
-            return _playersSelectedCards[_playersSelectedCards.Keys.ElementAt(_currentSelectionToVote)];
+            string userId = _playersSelectedCards.Keys.ElementAt(_currentSelectionToVote);
+            return _playersSelectedCards[userId];
         }
         public void VoteCurrentSelection(bool vote)
         {
