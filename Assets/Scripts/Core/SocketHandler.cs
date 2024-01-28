@@ -173,6 +173,12 @@ namespace PitchPerfect.Core
             receiveThread.Abort();
             sendThread.Abort();
         }
+
+        public void AbortThreads()
+        {
+            receiveThread.Abort();
+            sendThread.Abort();
+        }
         #endregion
 
     }

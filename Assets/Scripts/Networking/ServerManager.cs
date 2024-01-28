@@ -362,5 +362,10 @@ namespace PitchPerfect.Networking
         {
             return _joinedRoom;
         }
+
+        private void OnDestroy()
+        {
+            _socketHandler.AbortThreads();
+        }
     }
 }
