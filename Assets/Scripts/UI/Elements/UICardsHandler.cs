@@ -12,6 +12,14 @@ namespace PitchPerfect.UI
 
         public void PopulateCards(WordCardDTO[] wordCards)
         {
+            if (_cards != null)
+            {
+                foreach (var card in _cards)
+                {
+                    Destroy(card.gameObject);
+                }
+            }
+            
             _cards = new UIWordCard[wordCards.Length];
             
             for (int i = 0; i < wordCards.Length; i++)

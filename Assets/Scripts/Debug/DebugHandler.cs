@@ -9,5 +9,10 @@ namespace PitchPerfect.GameDebug
         {
             GameManager.Instance.StartGame();
         }
+        
+        public void OnEndGameClick()
+        {
+            GameManager.Instance.EndGame();
+        }
     }
 }

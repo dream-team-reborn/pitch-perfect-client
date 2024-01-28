@@ -15,6 +15,7 @@ namespace PitchPerfect.Core
         public void EndGame()
         {
             UIManager.Instance.Hide<UIInGamePage>();
+            SceneManager.UnloadSceneAsync("TheOffice");
         }
 
         public void JoinRoom()
