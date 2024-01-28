@@ -9,6 +9,8 @@ namespace PitchPerfect.Networking
         GameStarted,
         TurnStarted,
         RoomJoined,
+        PlayerCardsSelected,
+        AllPlayersSelectedCards,
         LeaveRoom,
         Lapis
     }
