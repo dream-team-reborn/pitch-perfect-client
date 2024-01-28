@@ -16,16 +16,14 @@ namespace PitchPerfect.UI
 
             OnTurnStart();
         }
+        private void OnDestroy()
+        {
+            ServerManager.Instance.OnTurnStart -= OnTurnStart;
+        }
 
         private void OnTurnStart()
         {
             _cardsHandler.PopulateCards(MatchDataManager.Instance.CurrentHandOfCards.ToArray());
-        }
-
-        private void OnDisable()
-        {
-
-            ServerManager.Instance.OnTurnStart -= OnTurnStart;
         }
     }
 }
