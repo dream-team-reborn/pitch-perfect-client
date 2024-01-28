@@ -127,6 +127,12 @@ namespace PitchPerfect.Core
             string userId = _playersSelectedCards.Keys.ElementAt(_currentSelectionToVote);
             return _playersSelectedCards[userId];
         }
+
+        public string GetUserIdOfSelectionToVote()
+        {
+            return _playersSelectedCards.Keys.ElementAt(_currentSelectionToVote);
+        }
+
         public void VoteCurrentSelection(bool vote)
         {
             _selectionVotes.Add(vote);
