@@ -83,9 +83,12 @@ namespace PitchPerfect.Networking
                 }
             }
             Debug.Log("Retrieving authorization token... endpoint: " + POST_LOGIN_ENDPOINT);
-            string jsonContent = JsonConvert.SerializeObject(new LoginDTO(username, "").ConvertToJson());
 
-            using (UnityWebRequest postRequest = UnityWebRequest.Post(UseLocal ? POST_LOGIN_ENDPOINT_LOCAL : POST_LOGIN_ENDPOINT, jsonContent, "application/json"))
+            var loginDtoJson = new LoginDTO(username, "").ConvertToJson();
+
+            Debug.Log("LoginDTO: " + loginDtoJson);
+
+            using (UnityWebRequest postRequest = UnityWebRequest.Post(UseLocal ? POST_LOGIN_ENDPOINT_LOCAL : POST_LOGIN_ENDPOINT, loginDtoJson, "application/json"))
             {
                 yield return postRequest.SendWebRequest();
 
@@ -170,9 +173,11 @@ namespace PitchPerfect.Networking
             _socketHandler.Send(message);
         }
 
-        public void SendVoteOfSelection()
+        public void SendVoteOfSelection(Dictionary<string ,bool> votes)
         {
-
+            string message = new PlayerRatedOtherCardsMessage(_joinedRoom.Id, votes).ConvertToJson();
+            Debug.Log("Sending message: " + message);
+            _socketHandler.Send(message);
         }
 
         #endregion
