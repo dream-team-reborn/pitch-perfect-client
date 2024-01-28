@@ -13,6 +13,8 @@ namespace PitchPerfect.Networking
         AllPlayerSelectedCards,
         PlayerRatedOtherCards,
         LeaveRoom,
+        RoomLeaved,
+        TurnEnded,
         Lapis
     }
 }

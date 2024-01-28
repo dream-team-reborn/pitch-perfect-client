@@ -27,6 +27,12 @@ namespace PitchPerfect.Core
         Dictionary<string, List<WordCardDTO>> _playersSelectedCards;
         public Dictionary<string, List<WordCardDTO>> PlayersSelectedCards => _playersSelectedCards;
 
+        Dictionary<string, int> _leaderboardEntries;
+        public Dictionary<string, int> LeaderboardEntries => _leaderboardEntries;
+
+        Dictionary<string, int> _resultEntries;
+        public Dictionary<string, int> ResultEntries => _resultEntries;
+
         List<bool> _selectionVotes = new List<bool>();
 
         public Action OnCurrentPhraseUpdated = null;
@@ -35,6 +41,8 @@ namespace PitchPerfect.Core
         public Action<int> OnCardUnselected = null;
         public Action OnPlayerListUpdated = null;
         public Action OnTrendsUpdated = null;
+        public Action OnLeaderboardsUpdated = null;
+        public Action OnResultsUpdated = null;
         public Action OnPlayerSelectedCardUpdated = null;
         public Action OnPlayerSelectionToVote = null;
 
@@ -71,6 +79,26 @@ namespace PitchPerfect.Core
                 _categoryTrends[int.Parse(kvp.Key)] = kvp.Value;
             }
             OnTrendsUpdated?.Invoke();
+        }
+
+        public void ReceivedLeaderboards(Dictionary<string, int> leaderboards)
+        {
+            _leaderboardEntries = new Dictionary<string, int>();
+            foreach (var kvp in leaderboards)
+            {
+                _leaderboardEntries[kvp.Key] = kvp.Value;
+            }
+            OnLeaderboardsUpdated?.Invoke();
+        }
+
+        public void ReceivedResults(Dictionary<string, int> results)
+        {
+            _resultEntries = new Dictionary<string, int>();
+            foreach (var kvp in results)
+            {
+                _resultEntries[kvp.Key] = kvp.Value;
+            }
+            OnResultsUpdated?.Invoke();
         }
 
         private void ResetSelectedCards()

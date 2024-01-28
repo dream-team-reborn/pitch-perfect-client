@@ -256,7 +256,13 @@ namespace PitchPerfect.Networking
 
         private void HandleTurnEnd()
         {
+            TurnEndedResponse response = JsonConvert.DeserializeObject<TurnEndedResponse>(msg);
+            Debug.Log($"HandleTurnEnd - LastTurn: {response.LastTurn}");
 
+
+            MatchDataManager.Instance.ReceivedLeaderboards(response.Leaderboards);
+            MatchDataManager.Instance.ReceivedResults(response.Result);
+            MatchDataManager.Instance.ReceivedTrends(response.Trends);
         }
 
 
@@ -322,6 +328,11 @@ namespace PitchPerfect.Networking
                     break;
                 case MessageType.AllPlayerSelectedCards:
                     HandleAllPlayersSelectedCards(msg);
+                    break;
+                case MessageType.RoomLeaved:
+                    break;
+                case MessageType.TurnEnded:
+                    HandleTurnEnd(msg);
                     break;
             }
         }

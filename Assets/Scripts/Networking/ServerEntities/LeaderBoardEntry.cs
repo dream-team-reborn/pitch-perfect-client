@@ -1,7 +1,7 @@
+﻿
 namespace PitchPerfect.Networking.ServerEntities
 {
-    public class TrendEntity
+    public class LeaderBoardEntry
     {
-        
     }
 }
