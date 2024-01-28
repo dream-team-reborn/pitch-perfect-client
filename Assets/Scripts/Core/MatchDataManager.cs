@@ -27,6 +27,8 @@ namespace PitchPerfect.Core
         Dictionary<string, List<WordCardDTO>> _playersSelectedCards;
         public Dictionary<string, List<WordCardDTO>> PlayersSelectedCards => _playersSelectedCards;
 
+        List<bool> _selectionVotes = new List<bool>();
+
         public Action OnCurrentPhraseUpdated = null;
         public Action OnCurrentHandOfCardsUpdated = null;
         public Action<int> OnCardSelected = null;
@@ -34,6 +36,9 @@ namespace PitchPerfect.Core
         public Action OnPlayerListUpdated = null;
         public Action OnTrendsUpdated = null;
         public Action OnPlayerSelectedCardUpdated = null;
+        public Action OnPlayerSelectionToVote = null;
+
+        int _currentSelectionToVote = -1;
 
         public void SetCurrentPhrase(PhraseCardDTO phraseDto)
         {
@@ -99,12 +104,48 @@ namespace PitchPerfect.Core
 
         internal void ReceivedPlayersSelection(List<KeyValuePair<string, List<int>>> selectedCards)
         {
+            _currentSelectionToVote = -1;
+            _selectionVotes = new List<bool>();
             _playersSelectedCards = new Dictionary<string, List<WordCardDTO>>();
+
             foreach(var kvp in selectedCards)
             {
                 _playersSelectedCards[kvp.Key] = CardDataManager.Instance.GetWordCardListByIds(kvp.Value);
             }
+
             OnPlayerSelectedCardUpdated?.Invoke();
         }
+
+        public List<WordCardDTO> GetSelectionToVote()
+        {
+            return _playersSelectedCards[_playersSelectedCards.Keys.ElementAt(_currentSelectionToVote - 1)];
+        }
+        public void VoteCurrentSelection(bool vote)
+        {
+            _selectionVotes.Add(vote);
+            NextSelectionToVote();
+        }
+        public void NextSelectionToVote()
+        {
+            if (_currentSelectionToVote < _playersSelectedCards.Keys.Count - 1)
+            {
+                _currentSelectionToVote++;
+                OnPlayerSelectionToVote?.Invoke();
+            }
+            else
+            {
+                Dictionary<string, bool> _votesPerUser = new Dictionary<string, bool>();
+
+                int voteIndex = 0;
+
+                foreach(var kvp in PlayersSelectedCards)
+                {
+                    _votesPerUser[kvp.Key] = _selectionVotes.ElementAt(voteIndex);
+                    voteIndex++;
+                }
+                ServerManager.Instance.SendVoteOfSelection(_votesPerUser);
+            }
+        }
+
     }
 }

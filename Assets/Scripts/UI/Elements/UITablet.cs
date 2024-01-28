@@ -107,12 +107,12 @@ namespace PitchPerfect.UI
 
         public void OnApprovedClick()
         {
-            
+            MatchDataManager.Instance.VoteCurrentSelection(true);
         }
 
         public void OnDeniedClick()
         {
-            
+            MatchDataManager.Instance.VoteCurrentSelection(false);
         }
     }
 }

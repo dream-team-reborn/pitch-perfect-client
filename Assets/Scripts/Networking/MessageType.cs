@@ -11,6 +11,7 @@ namespace PitchPerfect.Networking
         RoomJoined,
         PlayerCardsSelected,
         AllPlayerSelectedCards,
+        PlayerRatedOtherCards,
         LeaveRoom,
         Lapis
     }

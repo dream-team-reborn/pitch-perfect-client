@@ -1,3 +1,4 @@
+using System.Linq;
 using PitchPerfect.Core;
 using PitchPerfect.DTO;
 using PitchPerfect.Networking;
@@ -30,6 +31,7 @@ namespace PitchPerfect.UI
         {
             MatchDataManager.Instance.OnCardSelected += OnCardSelected;
             MatchDataManager.Instance.OnCardUnselected += OnCardUnselected;
+            MatchDataManager.Instance.OnPlayerSelectionToVote += OnSelectionToVote;
 
             PhraseCardDTO phraseCardDto = MatchDataManager.Instance.CurrentPhrase;
             ServerManager.Instance.OnAllUsersSelectedCards += SwitchToVote;
@@ -42,8 +44,9 @@ namespace PitchPerfect.UI
         private void OnDestroy()
         {
             MatchDataManager.Instance.OnCardSelected -= OnCardSelected;
-            MatchDataManager.Instance.OnCardUnselected += OnCardUnselected;
-            
+            MatchDataManager.Instance.OnCardUnselected -= OnCardUnselected;
+            MatchDataManager.Instance.OnPlayerSelectionToVote -= OnSelectionToVote;
+
             ServerManager.Instance.OnAllUsersSelectedCards -= SwitchToVote;
             ServerManager.Instance.OnAllUsersVoted -= SwitchToLeaderboard;
         }
@@ -108,6 +111,15 @@ namespace PitchPerfect.UI
                 _phraseText.text = GetCurrentFilledPhrase().Replace($"${i + 1}", EMPTY_SPACE);
                 return;
             }
+        }
+
+        private void OnSelectionToVote()
+        {
+            var wordList = MatchDataManager.Instance.GetSelectionToVote();
+
+            _wordsInPhrase = wordList.Select(o => o.Id).ToArray();
+
+            _phraseText.text = GetCurrentFilledPhrase();
         }
 
         private void SwitchToCardSelection()

@@ -4,18 +4,18 @@ namespace PitchPerfect.Login.DTO
 {
     public class LoginDTO
     {
-        private string name;
-        private string token;
+        public string Name;
+        public string Token;
 
         public LoginDTO(string name, string token)
         {
-            this.name = name;
-            this.token = token;
+            Name = name;
+            Token = token;
         }
 
         public override string ToString()
         {
-            return $"Name: {name} - Token: {token}";
+            return $"Name: {Name} - Token: {Token}";
         }
 
         public string ConvertToJson()
