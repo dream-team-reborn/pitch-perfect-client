@@ -8,6 +8,8 @@ namespace PitchPerfect.Core
 {
     public class GameManager : Manager<GameManager>
     {
+        private const float LOAD_MIN_DURATION = 0.2f;
+        
         public void StartGame()
         {
             UIManager.Instance.Fader.Fade();
@@ -23,8 +25,12 @@ namespace PitchPerfect.Core
         private IEnumerator LoadOffice()
         {
             var asyncOperation = SceneManager.LoadSceneAsync("TheOffice", LoadSceneMode.Additive);
-            
-            yield return new WaitUntil(() => asyncOperation.isDone);
+            var startOperationT = Time.time;
+
+            while (!asyncOperation.isDone || (Time.time - startOperationT) < LOAD_MIN_DURATION)
+            {
+                yield return 0;
+            }
             
             UIManager.Instance.Show<UIInGamePage>();
             UIManager.Instance.Fader.Fade();
@@ -34,7 +40,12 @@ namespace PitchPerfect.Core
         {
             var asyncOperation = SceneManager.UnloadSceneAsync("TheOffice");
             
-            yield return new WaitUntil(() => asyncOperation.isDone);
+            var startOperationT = Time.time;
+
+            while (!asyncOperation.isDone || (Time.time - startOperationT) < LOAD_MIN_DURATION)
+            {
+                yield return 0;
+            }
             
             UIManager.Instance.Hide<UIInGamePage>();
             UIManager.Instance.Fader.Fade();

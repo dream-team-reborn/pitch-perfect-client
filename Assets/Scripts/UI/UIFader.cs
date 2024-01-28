@@ -18,7 +18,7 @@ namespace PitchPerfect.UI
         {
             _fade = true;
             _fadeStartT = Time.time;
-            _startingAlpha = _image.color.a;
+            _startingAlpha = _image.material.color.a;
         }
 
         private void Update()
@@ -28,7 +28,7 @@ namespace PitchPerfect.UI
 
             float t = (Time.time - _fadeStartT) / _fadeDuration;
             float alpha = _startingAlpha > 0f ? Mathf.Lerp(_startingAlpha, 0f, t) : Mathf.Lerp(0f, 1f, t);
-            _image.color = new Color(1, 1, 1, alpha);
+            _image.material.color = new Color(1, 1, 1, alpha);
 
             if (t >= 1f)
             {
