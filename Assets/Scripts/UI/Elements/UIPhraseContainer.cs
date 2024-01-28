@@ -128,6 +128,9 @@ namespace PitchPerfect.UI
             _wordsInPhrase = wordList.Select(o => o.Id).ToArray();
 
             _phraseText.text = GetCurrentFilledPhrase();
+
+            var votedPlayerId = MatchDataManager.Instance.GetUserIdOfSelectionToVote();
+            _votedPlayerName.text = ServerManager.Instance.GetJoinedRoom().GetRoomPlayerById(votedPlayerId).Username;
         }
 
         private void SwitchToCardSelection()
