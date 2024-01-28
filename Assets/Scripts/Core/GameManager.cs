@@ -8,6 +8,7 @@ namespace PitchPerfect.Core
 {
     public class GameManager : Manager<GameManager>
     {
+        //intuition
         private const float LOAD_MIN_DURATION = 0.2f;
         
         public void StartGame()
