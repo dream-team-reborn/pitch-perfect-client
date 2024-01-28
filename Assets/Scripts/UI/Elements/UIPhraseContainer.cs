@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using PitchPerfect.Core;
 using PitchPerfect.DTO;
@@ -33,12 +34,12 @@ namespace PitchPerfect.UI
             MatchDataManager.Instance.OnCardUnselected += OnCardUnselected;
             MatchDataManager.Instance.OnPlayerSelectionToVote += OnSelectionToVote;
 
-            PhraseCardDTO phraseCardDto = MatchDataManager.Instance.CurrentPhrase;
             ServerManager.Instance.OnAllUsersSelectedCards += SwitchToVote;
             ServerManager.Instance.OnAllUsersVoted += SwitchToLeaderboard;
+            ServerManager.Instance.OnTurnStart += OnTurnStart;
+
+            OnTurnStart();
             
-            SwitchToCardSelection();
-            Setup(phraseCardDto.GetLocalizedContent(), phraseCardDto.PlaceholderAmount);
         }
 
         private void OnDestroy()
@@ -49,6 +50,7 @@ namespace PitchPerfect.UI
 
             ServerManager.Instance.OnAllUsersSelectedCards -= SwitchToVote;
             ServerManager.Instance.OnAllUsersVoted -= SwitchToLeaderboard;
+            ServerManager.Instance.OnTurnStart -= OnTurnStart;
         }
 
         private void Setup(string phrase, int placeholdersAmount)
@@ -63,6 +65,13 @@ namespace PitchPerfect.UI
             }
 
             _phraseText.text = phrase;
+        }
+
+        private void OnTurnStart()
+        {
+            SwitchToCardSelection();
+            PhraseCardDTO phraseCardDto = MatchDataManager.Instance.CurrentPhrase;
+            Setup(phraseCardDto.GetLocalizedContent(), phraseCardDto.PlaceholderAmount);
         }
 
         private string GetCurrentFilledPhrase()

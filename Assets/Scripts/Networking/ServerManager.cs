@@ -229,6 +229,8 @@ namespace PitchPerfect.Networking
             Debug.Log($"HandleMatchStarted - Trends: {response.Trends}");
 
             MatchDataManager.Instance.ReceivedTrends(response.Trends);
+
+            GameManager.Instance.StartGame();
         }
 
         private void HandleTurnStarted(string msg)
@@ -239,8 +241,7 @@ namespace PitchPerfect.Networking
             MatchDataManager.Instance.SetCurrentPhrase(CardDataManager.Instance.GetPhraseCardById(response.Phrase.ID));
             List<int> idsOfCards = response.Cards.Select(o => o.ID).ToList();
             MatchDataManager.Instance.ReceivedCards(CardDataManager.Instance.GetWordCardListByIds(idsOfCards));
-
-            GameManager.Instance.StartGame();
+            OnTurnStart?.Invoke();
         }
 
         private void HandleAllPlayersSelectedCards(string msg)
