@@ -6,14 +6,9 @@ using PitchPerfect.UI;
 using PitchPerfect.Core;
 using UnityEngine;
 using UnityEngine.Networking;
-using WebSocketSharp;
-using System.Net.WebSockets;
 using System;
-using System.Threading;
-using System.IO;
 using PitchPerfect.Networking.Messages;
 using PitchPerfect.Networking.Responses;
-using static PitchPerfect.Networking.Messages.BaseMessage;
 using PitchPerfect.DTO;
 using System.Collections.Generic;
 using System.Linq;
@@ -49,7 +44,7 @@ namespace PitchPerfect.Networking
 
         IEnumerator SendLoginRequest(string username)
         {
-            Debug.Log("Retrieving authorization token...");
+            Debug.Log("Retrieving authorization token... endpoint: " + POST_LOGIN_ENDPOINT);
             string jsonContent = JsonConvert.SerializeObject(new LoginDTO(username, "").ConvertToJson());
 
             using (UnityWebRequest postRequest = UnityWebRequest.Post(POST_LOGIN_ENDPOINT, jsonContent, "application/json"))
@@ -104,17 +99,22 @@ namespace PitchPerfect.Networking
         {
             string message = new JoinRoomMessage(roomId).ConvertToJson();
             Debug.Log("Sending message: " + message);
+            _joinedRoom = _rooms.Where(o => o.Id.Equals(roomId)).Single();
             _socketHandler.Send(message);
         }
 
         public void SendLeaveRoom()
         {
-
+            string message = new LeaveRoomMessage(_joinedRoom.Id).ConvertToJson();
+            Debug.Log("Sending message: " + message);
+            _socketHandler.Send(message);
         }
 
         public void SendPlayerReady()
         {
-
+            string message = new PlayerReadyMessage(_joinedRoom.Id).ConvertToJson();
+            Debug.Log("Sending message: " + message);
+            _socketHandler.Send(message);
         }
 
         public void SendCardSelection()
@@ -147,7 +147,9 @@ namespace PitchPerfect.Networking
             Debug.Log($"HandleRoomJoined - Result: {response.Result}");
 
             if (response.Result)
+            {
                 GameManager.Instance.JoinRoom();
+            }
 
         }
 
