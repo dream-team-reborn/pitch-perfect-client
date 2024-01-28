@@ -1,3 +1,5 @@
+using System;
+using PitchPerfect.Core;
 using PitchPerfect.DTO;
 using PitchPerfect.Networking;
 using UnityEngine;
@@ -10,11 +12,25 @@ namespace PitchPerfect.UI
         [SerializeField] private Transform _playersContainer;
         
         private UIPlayer[] _players;
-        
+
+        private void Start()
+        {
+            MatchDataManager.Instance.OnPlayerListUpdated += ReloadPlayersList;
+        }
+
+        private void OnDestroy()
+        {
+            MatchDataManager.Instance.OnPlayerListUpdated -= ReloadPlayersList;
+        }
+
         public override void Show()
         {
             base.Show();
+            ReloadPlayersList();
+        }
 
+        private void ReloadPlayersList()
+        {
             PlayerDTO[] players = new PlayerDTO[0];
             RoomDTO roomJoined = ServerManager.Instance.GetJoinedRoom();
             if(roomJoined != null)
