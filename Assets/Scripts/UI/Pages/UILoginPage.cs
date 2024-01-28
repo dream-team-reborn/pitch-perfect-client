@@ -10,6 +10,9 @@ namespace PitchPerfect.UI
 
         public void OnLoginButtonClick()
         {
+            if (string.IsNullOrEmpty(_usernameInput.text))
+                return;
+            
             ServerManager.Instance.RequestLogin(_usernameInput.text);
         }
     }
