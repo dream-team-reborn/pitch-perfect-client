@@ -1,8 +1,4 @@
-﻿
-using System;
-using Newtonsoft.Json;
-using PitchPerfect.Networking;
-using Unity.VisualScripting.Dependencies.Sqlite;
+﻿using Newtonsoft.Json;
 
 namespace PitchPerfect.Networking.Messages
 {
