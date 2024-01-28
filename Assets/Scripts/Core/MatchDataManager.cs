@@ -23,6 +23,9 @@ namespace PitchPerfect.Core
         List<int> _selectedCards = new List<int>();
         public List<int> SelectedCards => _selectedCards;
 
+        Dictionary<string, List<WordCardDTO>> _playersSelectedCards;
+        public Dictionary<string, List<WordCardDTO>> PlayersSelectedCards => _playersSelectedCards;
+
         public Action OnCurrentPhraseUpdated = null;
         public Action OnCurrentHandOfCardsUpdated = null;
         public Action<int> OnCardSelected = null;
@@ -91,10 +94,14 @@ namespace PitchPerfect.Core
             OnCardUnselected?.Invoke(id);
         }
 
-        public void ConfirmSelectedCards()
-        {
-            //TODO perform trigger of request with selected cards
-        }
 
+        internal void ReceivedPlayersSelection(List<KeyValuePair<string, List<int>>> selectedCards)
+        {
+            _playersSelectedCards = new Dictionary<string, List<WordCardDTO>>();
+            foreach(var kvp in selectedCards)
+            {
+                _playersSelectedCards[kvp.Key] = CardDataManager.Instance.GetWordCardListByIds(kvp.Value);
+            }
+        }
     }
 }

@@ -165,10 +165,12 @@ namespace PitchPerfect.Networking
 
         public void SendCardSelection()
         {
-
+            string message = new PlayerCardSelectedMessage(_authorizedUser.UserId, MatchDataManager.Instance.SelectedCards).ConvertToJson();
+            Debug.Log("Sending message: " + message);
+            _socketHandler.Send(message);
         }
 
-        public void SendCombinationChoice()
+        public void SendVoteOfSelection()
         {
 
         }
@@ -236,9 +238,14 @@ namespace PitchPerfect.Networking
             GameManager.Instance.StartGame();
         }
 
-        private void HandlePlayerCombinationChoices()
+        private void HandleAllPlayersSelectedCards(string msg)
         {
+            AllPlayerSelectedCardsResponse response = JsonConvert.DeserializeObject<AllPlayerSelectedCardsResponse>(msg);
+            Debug.Log($"HandleAllPlayersSelectedCards - PlayersCards: {response.PlayersCards.Count}");
 
+            var selectedCards = response.PlayersCards.Where(o => !o.Key.Equals(_authorizedUser.UserId)).ToList();
+
+            MatchDataManager.Instance.ReceivedPlayersSelection(selectedCards);
         }
 
         private void HandleTurnEnd()
@@ -306,6 +313,9 @@ namespace PitchPerfect.Networking
                     break;
                 case MessageType.RoomJoined:
                     HandleUserJoined(msg);
+                    break;
+                case MessageType.AllPlayersSelectedCards:
+                    HandleAllPlayersSelectedCards(msg);
                     break;
             }
         }
