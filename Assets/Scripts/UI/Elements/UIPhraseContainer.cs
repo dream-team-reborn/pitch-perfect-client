@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using PitchPerfect.Core;
+using PitchPerfect.DTO;
 using TMPro;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -21,10 +22,7 @@ namespace PitchPerfect.UI
             MatchDataManager.Instance.OnCardSelected += OnCardSelected;
             MatchDataManager.Instance.OnCardUnselected += OnCardUnselected;
 
-            int rnd = Random.Range(1, 21);
-            var phraseCardDto = CardDataManager.Instance.GetPhraseCardById(rnd);
-            
-            MatchDataManager.Instance.SetCurrentPhrase(phraseCardDto);
+            PhraseCardDTO phraseCardDto = MatchDataManager.Instance.CurrentPhrase;
             
             Setup(phraseCardDto.GetLocalizedContent(), phraseCardDto.PlaceholderAmount);
         }
