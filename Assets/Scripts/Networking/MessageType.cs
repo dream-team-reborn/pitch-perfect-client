@@ -8,6 +8,7 @@ namespace PitchPerfect.Networking
         PlayerReady,
         GameStarted,
         TurnStarted,
+        RoomJoined,
         LeaveRoom,
         Lapis
     }

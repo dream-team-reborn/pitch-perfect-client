@@ -203,9 +203,12 @@ namespace PitchPerfect.Networking
 
         }
 
-        private void HandleUserJoined()
+        private void HandleUserJoined(string msg)
         {
+            RoomJoinedResponse response = JsonConvert.DeserializeObject<RoomJoinedResponse>(msg);
+            Debug.Log($"HandleUserJoined - Name: {response.Player.Name}");
 
+            MatchDataManager.Instance.ReceivedPlayer(new PlayerDTO(response.Player.ID, response.Player.Name));
         }
 
         private void HandlePlayerReady()
@@ -300,6 +303,9 @@ namespace PitchPerfect.Networking
                     break;
                 case MessageType.CreateRoom:
                     SendListRoomRequest();
+                    break;
+                case MessageType.RoomJoined:
+                    HandleUserJoined(msg);
                     break;
             }
         }
