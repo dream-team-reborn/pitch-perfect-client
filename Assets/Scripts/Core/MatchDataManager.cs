@@ -38,7 +38,7 @@ namespace PitchPerfect.Core
         public Action OnPlayerSelectedCardUpdated = null;
         public Action OnPlayerSelectionToVote = null;
 
-        int _currentSelectionToVote = -1;
+        int _currentSelectionToVote = 0;
 
         public void SetCurrentPhrase(PhraseCardDTO phraseDto)
         {
@@ -104,7 +104,7 @@ namespace PitchPerfect.Core
 
         internal void ReceivedPlayersSelection(List<KeyValuePair<string, List<int>>> selectedCards)
         {
-            _currentSelectionToVote = -1;
+            _currentSelectionToVote = 0;
             _selectionVotes = new List<bool>();
             _playersSelectedCards = new Dictionary<string, List<WordCardDTO>>();
 
@@ -118,7 +118,7 @@ namespace PitchPerfect.Core
 
         public List<WordCardDTO> GetSelectionToVote()
         {
-            return _playersSelectedCards[_playersSelectedCards.Keys.ElementAt(_currentSelectionToVote - 1)];
+            return _playersSelectedCards[_playersSelectedCards.Keys.ElementAt(_currentSelectionToVote)];
         }
         public void VoteCurrentSelection(bool vote)
         {
@@ -127,7 +127,7 @@ namespace PitchPerfect.Core
         }
         public void NextSelectionToVote()
         {
-            if (_currentSelectionToVote < _playersSelectedCards.Keys.Count - 1)
+            if (_currentSelectionToVote < _playersSelectedCards.Keys.Count)
             {
                 _currentSelectionToVote++;
                 OnPlayerSelectionToVote?.Invoke();
