@@ -168,9 +168,14 @@ namespace PitchPerfect.Networking
 
         }
 
-        private void HandleMatchStarted()
+        private void HandleMatchStarted(string msg)
         {
+            GameStartedResponse response = JsonConvert.DeserializeObject<GameStartedResponse>(msg);
+            Debug.Log($"HandleMatchStarted - Trends: {response.Trends}");
 
+            MatchDataManager.Instance.ReceivedTrends(response.Trends);
+
+            GameManager.Instance.StartGame();
         }
 
         private void HandleTurnStarted()
@@ -228,12 +233,16 @@ namespace PitchPerfect.Networking
             switch (type)
             {
                 case MessageType.GetRooms:
-                    Debug.Log($"DispatchMessage MessageType.GetRooms case...");
+                    Debug.Log($"DispatchMessage {type} case...");
                     HandleRoomListReceived(msg);
                     break;
                 case MessageType.JoinRoom:
-                    Debug.Log($"DispatchMessage MessageType.JoinRoom case...");
+                    Debug.Log($"DispatchMessage {type} case...");
                     HandleRoomJoined(msg);
+                    break;
+                case MessageType.GameStarted:
+                    Debug.Log($"DispatchMessage {type} case...");
+                    HandleMatchStarted(msg);
                     break;
             }
         }

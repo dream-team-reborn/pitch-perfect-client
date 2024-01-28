@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using com.trashpandaboy.core;
 using PitchPerfect.DTO;
 
@@ -16,6 +17,9 @@ namespace PitchPerfect.Core
         List<WordCardDTO> _currentHandOfCards;
         public List<WordCardDTO> CurrentHandOfCards => _currentHandOfCards;
 
+        Dictionary<int, int> _categoryTrends;
+        public Dictionary<int, int> CategoryTrends => _categoryTrends;
+
         List<int> _selectedCards = new List<int>();
         public List<int> SelectedCards => _selectedCards;
 
@@ -24,6 +28,7 @@ namespace PitchPerfect.Core
         public Action<int> OnCardSelected = null;
         public Action<int> OnCardUnselected = null;
         public Action OnPlayerListUpdated = null;
+        public Action OnTrendsUpdated = null;
 
         public void SetCurrentPhrase(PhraseCardDTO phraseDto)
         {
@@ -46,6 +51,16 @@ namespace PitchPerfect.Core
 
             _matchPlayers.Add(player);
             OnPlayerListUpdated?.Invoke();
+        }
+
+        public void ReceivedTrends(Dictionary<string, int> trends)
+        {
+            _categoryTrends = new Dictionary<int, int>();
+            foreach (var kvp in trends)
+            {
+                _categoryTrends[int.Parse(kvp.Key)] = kvp.Value;
+            }
+            OnTrendsUpdated?.Invoke();
         }
 
         private void ResetSelectedCards()
