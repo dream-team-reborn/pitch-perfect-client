@@ -1,4 +1,5 @@
 using PitchPerfect.Core;
+using PitchPerfect.DTO;
 using PitchPerfect.Networking;
 using TMPro;
 using UnityEngine;
@@ -30,6 +31,7 @@ namespace PitchPerfect.UI
             MatchDataManager.Instance.OnCardSelected += OnCardSelected;
             MatchDataManager.Instance.OnCardUnselected += OnCardUnselected;
 
+            PhraseCardDTO phraseCardDto = MatchDataManager.Instance.CurrentPhrase;
             ServerManager.Instance.OnAllUsersSelectedCards += SwitchToVote;
             ServerManager.Instance.OnAllUsersVoted += SwitchToLeaderboard;
 
