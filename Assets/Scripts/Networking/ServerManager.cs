@@ -30,12 +30,12 @@ namespace PitchPerfect.Networking
         List<RoomDTO> _rooms = new List<RoomDTO>();
         RoomDTO _joinedRoom = null;
 
-        private Action OnGameStart = null;
-        private Action OnTurnStart = null;
-        private Action OnAllUsersSelectedCards = null;
-        private Action OnAllUsersVoted = null;
-        private Action OnTurnEnd = null;
-        private Action OnGameEnd = null;
+        public Action OnGameStart = null;
+        public Action OnTurnStart = null;
+        public Action OnAllUsersSelectedCards = null;
+        public Action OnAllUsersVoted = null;
+        public Action OnTurnEnd = null;
+        public Action OnGameEnd = null;
 
         private void Start()
         {
