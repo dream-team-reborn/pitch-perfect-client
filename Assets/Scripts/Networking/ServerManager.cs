@@ -96,6 +96,13 @@ namespace PitchPerfect.Networking
 
         #region Requests
 
+        public void SendCreateRoomRequest(string roomName)
+        {
+            string message = new CreateRoomMessage(roomName).ConvertToJson();
+            Debug.Log("Sending message: " + message);
+            _socketHandler.Send(message);
+        }
+
         public void SendListRoomRequest()
         {
             string message = new GetRoomsMessage().ConvertToJson();
@@ -158,7 +165,6 @@ namespace PitchPerfect.Networking
             {
                 GameManager.Instance.JoinRoom();
             }
-
         }
 
         private void HandleRoomLeft()
@@ -182,13 +188,18 @@ namespace PitchPerfect.Networking
             Debug.Log($"HandleMatchStarted - Trends: {response.Trends}");
 
             MatchDataManager.Instance.ReceivedTrends(response.Trends);
-
-            GameManager.Instance.StartGame();
         }
 
-        private void HandleTurnStarted()
+        private void HandleTurnStarted(string msg)
         {
+            TurnStartedResponse response = JsonConvert.DeserializeObject<TurnStartedResponse>(msg);
+            Debug.Log($"HandleTurnStarted - Cards: {response.Cards.Count}");
 
+            MatchDataManager.Instance.SetCurrentPhrase(CardDataManager.Instance.GetPhraseCardById(response.Phrase.ID));
+            List<int> idsOfCards = response.Cards.Select(o => o.ID).ToList();
+            MatchDataManager.Instance.ReceivedCards(CardDataManager.Instance.GetWordCardListByIds(idsOfCards));
+
+            GameManager.Instance.StartGame();
         }
 
         private void HandlePlayerCombinationChoices()
@@ -251,6 +262,10 @@ namespace PitchPerfect.Networking
                 case MessageType.GameStarted:
                     Debug.Log($"DispatchMessage {type} case...");
                     HandleMatchStarted(msg);
+                    break;
+                case MessageType.TurnStarted:
+                    Debug.Log($"DispatchMessage {type} case...");
+                    HandleTurnStarted(msg);
                     break;
             }
         }

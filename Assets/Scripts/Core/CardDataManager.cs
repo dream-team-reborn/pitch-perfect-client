@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using com.trashpandaboy.core;
 using Newtonsoft.Json;
 using PitchPerfect.DTO;
@@ -71,6 +73,11 @@ namespace PitchPerfect.Core
             return _wordCardsWholeList[id];
         }
 
+        public List<WordCardDTO> GetWordCardListByIds(List<int> ids)
+        {
+            return _wordCardsWholeList.Where(o => ids.Contains(o.Key)).Select(o => o.Value).ToList();
+        }
+
         public WordCardCategoryDTO GetCardCategoryById(int id)
         {
             return _cardCategoriesWholeList[id];
@@ -114,6 +121,7 @@ namespace PitchPerfect.Core
                     return new WordCardCategoryDTO(id, baseLocalize.Replace("$", $"{id}".PadLeft(3, '0')));
                 }
             }
-        } 
+        }
+
     }
 }

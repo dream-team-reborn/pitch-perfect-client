@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace PitchPerfect.Core
 {
-    public class SocketHandler
+    public class SocketHandler : IDisposable
     {
         private ClientWebSocket ws = new ClientWebSocket();
         private UTF8Encoding encoder; // For websocket text message encoding.
@@ -165,6 +165,13 @@ namespace PitchPerfect.Core
                     Task.Delay(50).Wait();
                 }
             }
+        }
+
+        public void Dispose()
+        {
+            ws.Dispose();
+            receiveThread.Abort();
+            sendThread.Abort();
         }
         #endregion
 

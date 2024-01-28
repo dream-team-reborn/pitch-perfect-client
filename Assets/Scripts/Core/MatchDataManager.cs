@@ -34,12 +34,12 @@ namespace PitchPerfect.Core
         {
             _currentPhrase = phraseDto;
 
-            OnCurrentPhraseUpdated?.Invoke();    
+            OnCurrentPhraseUpdated?.Invoke();
         }
 
         public void ReceivedCards(List<WordCardDTO> wordDto)
         {
-            _currentHandOfCards.AddRange(wordDto);
+            _currentHandOfCards = wordDto;
             ResetSelectedCards();
             OnCurrentHandOfCardsUpdated?.Invoke();
         }
@@ -95,5 +95,6 @@ namespace PitchPerfect.Core
         {
             //TODO perform trigger of request with selected cards
         }
+
     }
 }
