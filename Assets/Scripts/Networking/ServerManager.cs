@@ -165,7 +165,7 @@ namespace PitchPerfect.Networking
 
         public void SendCardSelection()
         {
-            string message = new PlayerCardSelectedMessage(_authorizedUser.UserId, MatchDataManager.Instance.SelectedCards).ConvertToJson();
+            string message = new PlayerCardSelectedMessage(_authorizedUser.UserId, _joinedRoom.Id, MatchDataManager.Instance.SelectedCards).ConvertToJson();
             Debug.Log("Sending message: " + message);
             _socketHandler.Send(message);
         }
@@ -314,7 +314,7 @@ namespace PitchPerfect.Networking
                 case MessageType.RoomJoined:
                     HandleUserJoined(msg);
                     break;
-                case MessageType.AllPlayersSelectedCards:
+                case MessageType.AllPlayerSelectedCards:
                     HandleAllPlayersSelectedCards(msg);
                     break;
             }

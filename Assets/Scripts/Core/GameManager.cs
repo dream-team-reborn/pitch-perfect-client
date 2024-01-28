@@ -1,5 +1,6 @@
 using System.Collections;
 using com.trashpandaboy.core;
+using PitchPerfect.Networking;
 using PitchPerfect.UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -59,6 +60,7 @@ namespace PitchPerfect.Core
         
         public void LeaveRoom()
         {
+            ServerManager.Instance.SendLeaveRoom();
             UIManager.Instance.Show<UIRoomsListPage>();
         }
 
