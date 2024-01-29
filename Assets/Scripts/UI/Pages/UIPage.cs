@@ -6,12 +6,12 @@ namespace PitchPerfect.UI
     {
         public virtual void Show()
         {
-            gameObject.SetActive(true);
+            gameObject?.SetActive(true);
         }
         
         public virtual void Hide()
         {
-            gameObject.SetActive(false);
+            gameObject?.SetActive(false);
         }
     }
 }

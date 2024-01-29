@@ -12,21 +12,21 @@ using PitchPerfect.Networking.Responses;
 using PitchPerfect.DTO;
 using System.Collections.Generic;
 using System.Linq;
+using HybridWebSocket;
+using System.Text;
+using PimDeWitte.UnityMainThreadDispatcher;
 
 namespace PitchPerfect.Networking
 {
     public class ServerManager : Manager<ServerManager>
     {
+
         [SerializeField]
         public bool UseLocal = false;
 
         private void OnDisable()
         {
-            if(_socketHandler.IsConnectionOpen())
-            {
-                SendLeaveRoom();
-            }
-            _socketHandler.Dispose();
+            SendLeaveRoom();
         }
 
         static string CONFIG_ENDPOINT = "https://pitch-perfect.mstefanini.com/config";
@@ -39,6 +39,8 @@ namespace PitchPerfect.Networking
         static string WEBSOCKET_ENDPOINT_LOCAL = "ws://192.168.1.201:8080/ws?token=$";
 
         private SocketHandler _socketHandler;
+
+        private WebGLSocketHandler _webGLSocketHandler; 
 
         AuthorizedUserDTO _authorizedUser = null;
         public AuthorizedUserDTO Player => _authorizedUser;
@@ -108,23 +110,26 @@ namespace PitchPerfect.Networking
         IEnumerator OpenClientSocket()
         {
             string endPoint = UseLocal ? WEBSOCKET_ENDPOINT_LOCAL : WEBSOCKET_ENDPOINT;
-            _socketHandler = new SocketHandler(endPoint.Replace("$",_authorizedUser.Token));
-            ConnectToServer();
+            endPoint = endPoint.Replace("$", _authorizedUser.Token);
+            //_socketHandler = new SocketHandler(endPoint);
+            _webGLSocketHandler = new WebGLSocketHandler(endPoint);
+            _webGLSocketHandler.OnHandleMessage += HandleMessageWrapper;
+
+            //ConnectToServer(endPoint);
             StartCoroutine(RetrieveRoomList());
             yield break;
         }
 
         IEnumerator RetrieveRoomList()
         {
-            Debug.Log("RetrieveRoomList");
-            if (!_socketHandler.IsConnectionOpen())
+            if (!_webGLSocketHandler.IsConnectionOpen())
             {
                 yield return new WaitForSeconds(0.1f);
                 StartCoroutine(RetrieveRoomList());
                 yield break;
             }
             
-            Debug.Log("RetrieveRoomList - IsConnectionOpen: " + _socketHandler.IsConnectionOpen());
+            Debug.Log("RetrieveRoomList - IsConnectionOpen: " + _webGLSocketHandler.IsConnectionOpen());
             SendListRoomRequest();
         }
 
@@ -134,14 +139,16 @@ namespace PitchPerfect.Networking
         {
             string message = new CreateRoomMessage(roomName).ConvertToJson();
             Debug.Log("Sending message: " + message);
-            _socketHandler.Send(message);
+            //_socketHandler.Send(message);
+            SendRequest(message);
         }
 
         public void SendListRoomRequest()
         {
             string message = new GetRoomsMessage().ConvertToJson();
             Debug.Log("Sending message: " + message);
-            _socketHandler.Send(message);
+            //_socketHandler.Send(message);
+            SendRequest(message);
         }
 
         public void SendJoinRoom(string roomId)
@@ -149,35 +156,43 @@ namespace PitchPerfect.Networking
             string message = new JoinRoomMessage(roomId).ConvertToJson();
             Debug.Log("Sending message: " + message);
             _joinedRoom = _rooms.Where(o => o.Id.Equals(roomId)).Single();
-            _socketHandler.Send(message);
+            //_socketHandler.Send(message);
+            SendRequest(message);
         }
 
         public void SendLeaveRoom()
         {
-            string message = new LeaveRoomMessage(_joinedRoom.Id).ConvertToJson();
-            Debug.Log("Sending message: " + message);
-            _socketHandler.Send(message);
+            if(_joinedRoom != null)
+            {
+                string message = new LeaveRoomMessage(_joinedRoom.Id).ConvertToJson();
+                Debug.Log("Sending message: " + message);
+                //_socketHandler.Send(message);
+                SendRequest(message);
+            }
         }
 
         public void SendPlayerReady()
         {
             string message = new PlayerReadyMessage(_joinedRoom.Id).ConvertToJson();
             Debug.Log("Sending message: " + message);
-            _socketHandler.Send(message);
+            //_socketHandler.Send(message);
+            SendRequest(message);
         }
 
         public void SendCardSelection()
         {
             string message = new PlayerCardSelectedMessage(_authorizedUser.UserId, _joinedRoom.Id, MatchDataManager.Instance.SelectedCards).ConvertToJson();
             Debug.Log("Sending message: " + message);
-            _socketHandler.Send(message);
+            //_socketHandler.Send(message);
+            SendRequest(message);
         }
 
         public void SendVoteOfSelection(Dictionary<string ,bool> votes)
         {
             string message = new PlayerRatedOtherCardsMessage(_joinedRoom.Id, votes).ConvertToJson();
             Debug.Log("Sending message: " + message);
-            _socketHandler.Send(message);
+            //_socketHandler.Send(message);
+            SendRequest(message);
         }
 
         #endregion
@@ -190,7 +205,7 @@ namespace PitchPerfect.Networking
 
             _rooms = response.Rooms.Select(o => o.ConvertToDTO()).ToList();
 
-            GameManager.Instance.OnRoomsListJoined();
+            EventDispatcher.TriggerEvent(GameManager.GameManageEvents.JoinRoomList.ToString());
 
         }
 
@@ -274,27 +289,34 @@ namespace PitchPerfect.Networking
         /// </summary>
         private void Update()
         {
-            if (_socketHandler == null)
-                return;
+            //if (_socketHandler == null)
+            //    return;
 
-            // Check if server send new messages
-            var cqueue = _socketHandler.receiveQueue;
-            string msg;
-            while (cqueue.TryPeek(out msg))
-            {
-                // Parse newly received messages
-                cqueue.TryDequeue(out msg);
-                HandleMessage(msg);
-            }
+            //// Check if server send new messages
+            //var cqueue = _socketHandler.receiveQueue;
+            //string msg;
+            //while (cqueue.TryPeek(out msg))
+            //{
+            //    // Parse newly received messages
+            //    cqueue.TryDequeue(out msg);
+            //    HandleMessage(msg);
+            //}
         }
         /// <summary>
         /// Method responsible for handling server messages
         /// </summary>
         /// <param name="msg">Message.</param>
-        private void HandleMessage(string msg)
+        IEnumerator HandleMessage(string msg)
         {
             Debug.Log($"HandleMessage: {msg}");
             DispatchMessage(msg);
+
+            yield break;
+        }
+
+        private void HandleMessageWrapper(string msg)
+        {
+            UnityMainThreadDispatcher.Instance().Enqueue(HandleMessage(msg));
         }
 
         private void DispatchMessage(string msg)
@@ -340,9 +362,9 @@ namespace PitchPerfect.Networking
         /// <summary>
         /// Call this method to connect to the server
         /// </summary>
-        public async void ConnectToServer()
+        public void ConnectToServer(string endpoint)
         {
-            await _socketHandler.Connect();
+           
         }
         /// <summary>
         /// Method which sends data through websocket
@@ -350,7 +372,8 @@ namespace PitchPerfect.Networking
         /// <param name="message">Message.</param>
         public void SendRequest(string message)
         {
-            _socketHandler.Send(message);
+            //_socketHandler.Send(message);
+            _webGLSocketHandler.SendMessage(message);
         }
 
         public RoomDTO[] GetRooms()
@@ -365,7 +388,7 @@ namespace PitchPerfect.Networking
 
         private void OnDestroy()
         {
-            _socketHandler.AbortThreads();
+
         }
     }
 }

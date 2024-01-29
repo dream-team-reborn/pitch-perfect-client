@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.5121491, g: 0.51895136, b: 0.4671274, a: 1}
+  m_IndirectSpecularColor: {r: 0.48188823, g: 0.48768854, b: 0.44582692, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -197,6 +197,50 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1768450507
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1768450509}
+  - component: {fileID: 1768450508}
+  m_Layer: 0
+  m_Name: MainThreadDispatcher
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1768450508
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1768450507}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 16173428f7358476fa784f899e396692, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &1768450509
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1768450507}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -103.25306, y: 55.079624, z: -40.84546}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &23889289265891528
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -312,6 +356,11 @@ PrefabInstance:
         type: 3}
       propertyPath: _loginHandler
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 2229281602685212872, guid: 4e532dbfc6631f74396368a9f5b972b4,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -0.095947266
       objectReference: {fileID: 0}
     - target: {fileID: 3675702661783010416, guid: 4e532dbfc6631f74396368a9f5b972b4,
         type: 3}
@@ -499,3 +548,4 @@ SceneRoots:
   - {fileID: 1337342758}
   - {fileID: 5871217884774195214}
   - {fileID: 23889289265891528}
+  - {fileID: 1768450509}

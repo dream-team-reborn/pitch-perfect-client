@@ -1,5 +1,6 @@
 using System.Collections;
 using com.trashpandaboy.core;
+using com.trashpandaboy.core.Utils;
 using PitchPerfect.Networking;
 using PitchPerfect.UI;
 using UnityEngine;
@@ -9,6 +10,22 @@ namespace PitchPerfect.Core
 {
     public class GameManager : Manager<GameManager>
     {
+        public enum GameManageEvents
+        {
+            JoinRoomList
+        }
+
+        protected override void Awake()
+        {
+            base.Awake();
+            EventDispatcher.StartListening(GameManageEvents.JoinRoomList.ToString(), OnRoomsListJoined);
+        }
+
+        private void OnRoomsListJoined(DataSet arg0)
+        {
+            UIManager.Instance.Show<UIRoomsListPage>();
+        }
+
         //intuition
         private const float LOAD_MIN_DURATION = 0.2f;
         
@@ -66,7 +83,6 @@ namespace PitchPerfect.Core
 
         public void OnRoomsListJoined()
         {
-            UIManager.Instance.Show<UIRoomsListPage>();
         }
     }
 }
