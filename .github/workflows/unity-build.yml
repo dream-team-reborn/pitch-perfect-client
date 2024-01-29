@@ -1,7 +1,5 @@
 name: Unity build
 
-on: [push, pull_request]
-
 jobs:
   build:
     name: Build my project ✨
