@@ -471,29 +471,25 @@ namespace HybridWebSocket
                 // Bind OnOpen event
                 this.ws.OnOpen += (sender, ev) =>
                 {
-                    Debug.Log("WS# - OnOpen called...");
                     this.OnOpen?.Invoke();
                 };
 
                 // Bind OnMessage event
                 this.ws.OnMessage += (sender, ev) =>
                 {
-                    Debug.Log("WS# - OnMessage called...");
-                    //if (ev.RawData != null)
+                    if (ev.RawData != null)
                         this.OnMessage?.Invoke(ev.RawData);
                 };
 
                 // Bind OnError event
                 this.ws.OnError += (sender, ev) =>
                 {
-                    Debug.Log("WS# - OnError called...");
                     this.OnError?.Invoke(ev.Message);
                 };
 
                 // Bind OnClose event
                 this.ws.OnClose += (sender, ev) =>
                 {
-                    Debug.Log("WS# - OnClose called...");
                     this.OnClose?.Invoke(
                         WebSocketHelpers.ParseCloseCodeEnum( (int)ev.Code )
                     );

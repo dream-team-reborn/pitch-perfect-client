@@ -36,7 +36,7 @@ namespace PitchPerfect.Core
                 loadedLocalizations = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonTextFile.text);
                 foreach (var kvp in loadedLocalizations)
                 {
-                    //Debug.Log($"Loaded localization entry - Key: {kvp.Key} - Value: {kvp.Value}");
+                    //Log.Info($"Loaded localization entry - Key: {kvp.Key} - Value: {kvp.Value}");
                 }
             }
         }
@@ -48,7 +48,7 @@ namespace PitchPerfect.Core
                 return loadedLocalizations[key];
             }
 
-            Debug.Log("Localization key not found: " + key);
+            Log.Info("Localization key not found: " + key);
             return MISSING_TRANSLATION;
         }
 

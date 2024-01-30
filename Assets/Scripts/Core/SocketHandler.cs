@@ -46,14 +46,14 @@ namespace PitchPerfect.Core
 
         public async Task Connect()
         {
-            Debug.Log("Connecting to: " + serverUri);
+            Log.Info("Connecting to: " + serverUri);
             await ws.ConnectAsync(serverUri, CancellationToken.None);
             while (IsConnecting())
             {
-                Debug.Log("Waiting to connect...");
+                Log.Info("Waiting to connect...");
                 Task.Delay(50).Wait();
             }
-            Debug.Log("Connect status: " + ws.State);
+            Log.Info("Connect status: " + ws.State);
         }
 
         #region [Status]
@@ -86,7 +86,7 @@ namespace PitchPerfect.Core
         public void Send(string message)
         {
             byte[] buffer = encoder.GetBytes(message);
-            //Debug.Log("Message to queue for send: " + buffer.Length + ", message: " + message);
+            //Log.Info("Message to queue for send: " + buffer.Length + ", message: " + message);
             var sendBuf = new ArraySegment<byte>(buffer);
             sendQueue.Add(sendBuf);
         }
@@ -96,14 +96,14 @@ namespace PitchPerfect.Core
         /// </summary>
         private async void RunSend()
         {
-            Debug.Log("WebSocket Message Sender looping.");
+            Log.Info("WebSocket Message Sender looping.");
             ArraySegment<byte> msg;
             while (true)
             {
                 while (!sendQueue.IsCompleted)
                 {
                     msg = sendQueue.Take();
-                    //Debug.Log("Dequeued this message to send: " + msg);
+                    //Log.Info("Dequeued this message to send: " + msg);
                     await ws.SendAsync(msg, WebSocketMessageType.Text, true /* is last part of message */, CancellationToken.None);
                 }
             }
@@ -130,7 +130,7 @@ namespace PitchPerfect.Core
                 {
                     chunkResult = await ws.ReceiveAsync(arrayBuf, CancellationToken.None);
                     ms.Write(arrayBuf.Array, arrayBuf.Offset, chunkResult.Count);
-                    //Debug.Log("Size of Chunk message: " + chunkResult.Count);
+                    //Log.Info("Size of Chunk message: " + chunkResult.Count);
                     if ((UInt64)(chunkResult.Count) > MAXREADSIZE)
                     {
                         Console.Error.WriteLine("Warning: Message is bigger than expected!");
@@ -150,11 +150,11 @@ namespace PitchPerfect.Core
         /// </summary>
         private async void RunReceive()
         {
-            Debug.Log("WebSocket Message Receiver looping.");
+            Log.Info("WebSocket Message Receiver looping.");
             string result;
             while (true)
             {
-                //Debug.Log("Awaiting Receive...");
+                //Log.Info("Awaiting Receive...");
                 result = await Receive();
                 if (result != null && result.Length > 0)
                 {

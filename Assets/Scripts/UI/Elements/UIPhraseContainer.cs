@@ -123,14 +123,17 @@ namespace PitchPerfect.UI
         private void OnSelectionToVote()
         {
             var wordList = MatchDataManager.Instance.GetSelectionToVote();
-            Debug.Log($"Selection to vote: {String.Join(",", wordList.Select(o => o.GetLocalizedContent()))}");
+            if (wordList != null)
+            {
+                Log.Info($"Selection to vote: {String.Join(",", wordList.Select(o => o.GetLocalizedContent()))}");
 
-            _wordsInPhrase = wordList.Select(o => o.Id).ToArray();
+                _wordsInPhrase = wordList.Select(o => o.Id).ToArray();
 
-            _phraseText.text = GetCurrentFilledPhrase();
+                _phraseText.text = GetCurrentFilledPhrase();
 
-            var votedPlayerId = MatchDataManager.Instance.GetUserIdOfSelectionToVote();
-            _votedPlayerName.text = ServerManager.Instance.GetJoinedRoom().GetRoomPlayerById(votedPlayerId).Username;
+                var votedPlayerId = MatchDataManager.Instance.GetUserIdOfSelectionToVote();
+                _votedPlayerName.text = ServerManager.Instance.GetJoinedRoom().GetRoomPlayerById(votedPlayerId).Username;
+            }
         }
 
         private void SwitchToCardSelection()

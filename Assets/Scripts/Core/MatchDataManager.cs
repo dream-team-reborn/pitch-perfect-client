@@ -18,8 +18,8 @@ namespace PitchPerfect.Core
         List<WordCardDTO> _currentHandOfCards;
         public List<WordCardDTO> CurrentHandOfCards => _currentHandOfCards;
 
-        Dictionary<int, int> _categoryTrends;
-        public Dictionary<int, int> CategoryTrends => _categoryTrends;
+        private Dictionary<int, List<int>> _categoryTrends = new();
+        public Dictionary<int, List<int>> CategoryTrends => _categoryTrends;
 
         List<int> _selectedCards = new List<int>();
         public List<int> SelectedCards => _selectedCards;
@@ -48,20 +48,20 @@ namespace PitchPerfect.Core
 
         int _currentSelectionToVote = 0;
 
+        #region Structures population
+
         public void SetCurrentPhrase(PhraseCardDTO phraseDto)
         {
             _currentPhrase = phraseDto;
 
             OnCurrentPhraseUpdated?.Invoke();
         }
-
         public void ReceivedCards(List<WordCardDTO> wordDto)
         {
             _currentHandOfCards = wordDto;
             ResetSelectedCards();
             OnCurrentHandOfCardsUpdated?.Invoke();
         }
-
         public void ReceivedPlayer(PlayerDTO player)
         {
             if (_matchPlayers == null)
@@ -70,17 +70,20 @@ namespace PitchPerfect.Core
             _matchPlayers.Add(player);
             OnPlayerListUpdated?.Invoke();
         }
-
         public void ReceivedTrends(Dictionary<string, int> trends)
         {
-            _categoryTrends = new Dictionary<int, int>();
+            if(_categoryTrends == null)
+                _categoryTrends = new Dictionary<int, List<int>>();
             foreach (var kvp in trends)
             {
-                _categoryTrends[int.Parse(kvp.Key)] = kvp.Value;
+                int key = int.Parse(kvp.Key);
+                if (!_categoryTrends.ContainsKey(key))
+                    _categoryTrends[key] = new();
+                
+                _categoryTrends[int.Parse(kvp.Key)].Add(kvp.Value);
             }
             OnTrendsUpdated?.Invoke();
         }
-
         public void ReceivedLeaderboards(Dictionary<string, int> leaderboards)
         {
             _leaderboardEntries = new Dictionary<string, int>();
@@ -100,6 +103,8 @@ namespace PitchPerfect.Core
             }
             OnResultsUpdated?.Invoke();
         }
+
+        #endregion
 
         private void ResetSelectedCards()
         {
@@ -152,8 +157,13 @@ namespace PitchPerfect.Core
 
         public List<WordCardDTO> GetSelectionToVote()
         {
-            string userId = _playersSelectedCards.Keys.ElementAt(_currentSelectionToVote);
-            return _playersSelectedCards[userId];
+            if (_playersSelectedCards.Keys.Count > 0)
+            {
+                string userId = _playersSelectedCards.Keys.ElementAt(_currentSelectionToVote);
+                return _playersSelectedCards[userId];
+            }
+
+            return null;
         }
 
         public string GetUserIdOfSelectionToVote()

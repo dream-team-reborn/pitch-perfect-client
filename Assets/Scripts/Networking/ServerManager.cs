@@ -21,6 +21,8 @@ namespace PitchPerfect.Networking
     public class ServerManager : Manager<ServerManager>
     {
 
+        WebSocket wsWebGL;
+
         [SerializeField]
         public bool UseLocal = false;
 
@@ -37,10 +39,6 @@ namespace PitchPerfect.Networking
 
         static string WEBSOCKET_ENDPOINT = "wss://pitch-perfect.mstefanini.com/ws?token=$";
         static string WEBSOCKET_ENDPOINT_LOCAL = "ws://192.168.1.201:8080/ws?token=$";
-
-        private SocketHandler _socketHandler;
-
-        private WebGLSocketHandler _webGLSocketHandler; 
 
         AuthorizedUserDTO _authorizedUser = null;
         public AuthorizedUserDTO Player => _authorizedUser;
@@ -63,7 +61,7 @@ namespace PitchPerfect.Networking
         public void RequestLogin(string username)
         {
             //TODO: Send HTTP message with username
-            Debug.Log($"Requesting Login with username {username}");
+            Log.Info($"Requesting Login with username {username}");
 
             StartCoroutine(SendLoginRequest(username));
         }
@@ -76,7 +74,7 @@ namespace PitchPerfect.Networking
 
                 if (getRequest.result != UnityWebRequest.Result.Success)
                 {
-                    Debug.Log(getRequest.error);
+                    Log.Info(getRequest.error);
                     yield break;
                 }
                 else
@@ -84,11 +82,11 @@ namespace PitchPerfect.Networking
                     CardDataManager.Instance.OnConfigReceived(getRequest.downloadHandler.text);
                 }
             }
-            Debug.Log("Retrieving authorization token... endpoint: " + POST_LOGIN_ENDPOINT);
+            Log.Info("Retrieving authorization token... endpoint: " + POST_LOGIN_ENDPOINT);
 
             var loginDtoJson = new LoginDTO(username, "").ConvertToJson();
 
-            Debug.Log("LoginDTO: " + loginDtoJson);
+            Log.Info("LoginDTO: " + loginDtoJson);
 
             using (UnityWebRequest postRequest = UnityWebRequest.Post(UseLocal ? POST_LOGIN_ENDPOINT_LOCAL : POST_LOGIN_ENDPOINT, loginDtoJson, "application/json"))
             {
@@ -96,12 +94,12 @@ namespace PitchPerfect.Networking
 
                 if (postRequest.result != UnityWebRequest.Result.Success)
                 {
-                    Debug.Log(postRequest.error);
+                    Log.Info(postRequest.error);
                 }
                 else
                 {
                     _authorizedUser = JsonConvert.DeserializeObject<AuthorizedUserDTO>(postRequest.downloadHandler.text);
-                    Debug.Log($"Retrieved authorized user \n {_authorizedUser}");
+                    Log.Info($"Retrieved authorized user \n {_authorizedUser}");
                     StartCoroutine(OpenClientSocket());
                 }
             }
@@ -111,26 +109,73 @@ namespace PitchPerfect.Networking
         {
             string endPoint = UseLocal ? WEBSOCKET_ENDPOINT_LOCAL : WEBSOCKET_ENDPOINT;
             endPoint = endPoint.Replace("$", _authorizedUser.Token);
-            //_socketHandler = new SocketHandler(endPoint);
-            _webGLSocketHandler = new WebGLSocketHandler(endPoint);
-            _webGLSocketHandler.OnHandleMessage += HandleMessageWrapper;
 
-            //ConnectToServer(endPoint);
+            CreateAndConnectSocket(endPoint);
+
             StartCoroutine(RetrieveRoomList());
             yield break;
         }
 
+        private void CreateAndConnectSocket(string endPoint)
+        {
+            wsWebGL = WebSocketFactory.CreateInstance(endPoint);
+
+            wsWebGL.OnOpen += () =>
+            {
+                Log.Info("WS connected!");
+                Log.Info("WS state: " + wsWebGL.GetState().ToString());
+
+            };
+
+            // Add OnMessage event listener
+            wsWebGL.OnMessage += (byte[] msg) =>
+            {
+                Log.Info($"Received {msg.Length} bytes");
+                try
+                {
+                    string stringMsg = Encoding.UTF8.GetString(msg);
+                    Log.Info("WS received message: " + stringMsg);
+
+                    HandleMessageThreadWrapper(stringMsg);
+                }
+                catch (Exception e)
+                {
+                    Log.Info(e.StackTrace);
+                }
+            };
+
+            // Add OnError event listener
+            wsWebGL.OnError += (string errMsg) =>
+            {
+                Log.Info("WS error: " + errMsg);
+            };
+
+            // Add OnClose event listener
+            wsWebGL.OnClose += (WebSocketCloseCode code) =>
+            {
+                Log.Info("WS closed with code: " + code.ToString());
+            };
+
+            // Connect to the server
+            wsWebGL.Connect();
+        }
+
         IEnumerator RetrieveRoomList()
         {
-            if (!_webGLSocketHandler.IsConnectionOpen())
+            if (!IsConnectionOpen())
             {
                 yield return new WaitForSeconds(0.1f);
                 StartCoroutine(RetrieveRoomList());
                 yield break;
             }
             
-            Debug.Log("RetrieveRoomList - IsConnectionOpen: " + _webGLSocketHandler.IsConnectionOpen());
+            Log.Info("RetrieveRoomList - IsConnectionOpen: " + IsConnectionOpen());
             SendListRoomRequest();
+        }
+
+        private bool IsConnectionOpen()
+        {
+            return wsWebGL.GetState() == WebSocketState.Open;
         }
 
         #region Requests
@@ -138,7 +183,7 @@ namespace PitchPerfect.Networking
         public void SendCreateRoomRequest(string roomName)
         {
             string message = new CreateRoomMessage(roomName).ConvertToJson();
-            Debug.Log("Sending message: " + message);
+            Log.Info("Sending message: " + message);
             //_socketHandler.Send(message);
             SendRequest(message);
         }
@@ -146,7 +191,7 @@ namespace PitchPerfect.Networking
         public void SendListRoomRequest()
         {
             string message = new GetRoomsMessage().ConvertToJson();
-            Debug.Log("Sending message: " + message);
+            Log.Info("Sending message: " + message);
             //_socketHandler.Send(message);
             SendRequest(message);
         }
@@ -154,7 +199,7 @@ namespace PitchPerfect.Networking
         public void SendJoinRoom(string roomId)
         {
             string message = new JoinRoomMessage(roomId).ConvertToJson();
-            Debug.Log("Sending message: " + message);
+            Log.Info("Sending message: " + message);
             _joinedRoom = _rooms.Where(o => o.Id.Equals(roomId)).Single();
             //_socketHandler.Send(message);
             SendRequest(message);
@@ -165,7 +210,7 @@ namespace PitchPerfect.Networking
             if(_joinedRoom != null)
             {
                 string message = new LeaveRoomMessage(_joinedRoom.Id).ConvertToJson();
-                Debug.Log("Sending message: " + message);
+                Log.Info("Sending message: " + message);
                 //_socketHandler.Send(message);
                 SendRequest(message);
             }
@@ -174,7 +219,7 @@ namespace PitchPerfect.Networking
         public void SendPlayerReady()
         {
             string message = new PlayerReadyMessage(_joinedRoom.Id).ConvertToJson();
-            Debug.Log("Sending message: " + message);
+            Log.Info("Sending message: " + message);
             //_socketHandler.Send(message);
             SendRequest(message);
         }
@@ -182,7 +227,7 @@ namespace PitchPerfect.Networking
         public void SendCardSelection()
         {
             string message = new PlayerCardSelectedMessage(_authorizedUser.UserId, _joinedRoom.Id, MatchDataManager.Instance.SelectedCards).ConvertToJson();
-            Debug.Log("Sending message: " + message);
+            Log.Info("Sending message: " + message);
             //_socketHandler.Send(message);
             SendRequest(message);
         }
@@ -190,7 +235,7 @@ namespace PitchPerfect.Networking
         public void SendVoteOfSelection(Dictionary<string ,bool> votes)
         {
             string message = new PlayerRatedOtherCardsMessage(_joinedRoom.Id, votes).ConvertToJson();
-            Debug.Log("Sending message: " + message);
+            Log.Info("Sending message: " + message);
             //_socketHandler.Send(message);
             SendRequest(message);
         }
@@ -212,7 +257,7 @@ namespace PitchPerfect.Networking
         private void HandleRoomJoined(string msg)
         {
             JoinRoomResponse response = JsonConvert.DeserializeObject<JoinRoomResponse>(msg);
-            Debug.Log($"HandleRoomJoined - Result: {response.Result}");
+            Log.Info($"HandleRoomJoined - Result: {response.Result}");
 
             if (response.Result)
             {
@@ -228,7 +273,7 @@ namespace PitchPerfect.Networking
         private void HandleUserJoined(string msg)
         {
             RoomJoinedResponse response = JsonConvert.DeserializeObject<RoomJoinedResponse>(msg);
-            Debug.Log($"HandleUserJoined - Name: {response.Player.Name}");
+            Log.Info($"HandleUserJoined - Name: {response.Player.Name}");
 
             MatchDataManager.Instance.ReceivedPlayer(new PlayerDTO(response.Player.ID, response.Player.Name));
         }
@@ -241,7 +286,7 @@ namespace PitchPerfect.Networking
         private void HandleMatchStarted(string msg)
         {
             GameStartedResponse response = JsonConvert.DeserializeObject<GameStartedResponse>(msg);
-            Debug.Log($"HandleMatchStarted - Trends: {response.Trends}");
+            Log.Info($"HandleMatchStarted - Trends: {response.Trends}");
 
             MatchDataManager.Instance.ReceivedTrends(response.Trends);
 
@@ -251,7 +296,7 @@ namespace PitchPerfect.Networking
         private void HandleTurnStarted(string msg)
         {
             TurnStartedResponse response = JsonConvert.DeserializeObject<TurnStartedResponse>(msg);
-            Debug.Log($"HandleTurnStarted - Cards: {response.Cards.Count}");
+            Log.Info($"HandleTurnStarted - Cards: {response.Cards.Count}");
 
             MatchDataManager.Instance.SetCurrentPhrase(CardDataManager.Instance.GetPhraseCardById(response.Phrase.ID));
             List<int> idsOfCards = response.Cards.Select(o => o.ID).ToList();
@@ -262,7 +307,7 @@ namespace PitchPerfect.Networking
         private void HandleAllPlayersSelectedCards(string msg)
         {
             AllPlayerSelectedCardsResponse response = JsonConvert.DeserializeObject<AllPlayerSelectedCardsResponse>(msg);
-            Debug.Log($"HandleAllPlayersSelectedCards - PlayersCards: {response.PlayersCards.Count}");
+            Log.Info($"HandleAllPlayersSelectedCards - PlayersCards: {response.PlayersCards.Count}");
 
             var selectedCards = response.PlayersCards.Where(o => !o.Key.Equals(_authorizedUser.UserId)).ToList();
 
@@ -272,74 +317,55 @@ namespace PitchPerfect.Networking
         private void HandleTurnEnd(string msg)
         {
             TurnEndedResponse response = JsonConvert.DeserializeObject<TurnEndedResponse>(msg);
-            Debug.Log($"HandleTurnEnd - LastTurn: {response.LastTurn}");
+            Log.Info($"HandleTurnEnd - LastTurn: {response.LastTurn}");
 
 
             MatchDataManager.Instance.ReceivedLeaderboards(response.Leaderboards);
             MatchDataManager.Instance.ReceivedResults(response.Result);
             MatchDataManager.Instance.ReceivedTrends(response.Trends);
+            
+            // if(response.LastTurn)
+                // GameManager.Instance.EndGame();
         }
 
 
         #endregion
 
 
-        /// <summary>
-        /// Unity method called every frame
-        /// </summary>
-        private void Update()
-        {
-            //if (_socketHandler == null)
-            //    return;
 
-            //// Check if server send new messages
-            //var cqueue = _socketHandler.receiveQueue;
-            //string msg;
-            //while (cqueue.TryPeek(out msg))
-            //{
-            //    // Parse newly received messages
-            //    cqueue.TryDequeue(out msg);
-            //    HandleMessage(msg);
-            //}
-        }
-        /// <summary>
-        /// Method responsible for handling server messages
-        /// </summary>
-        /// <param name="msg">Message.</param>
-        IEnumerator HandleMessage(string msg)
-        {
-            Debug.Log($"HandleMessage: {msg}");
-            DispatchMessage(msg);
-
-            yield break;
-        }
-
-        private void HandleMessageWrapper(string msg)
+        private void HandleMessageThreadWrapper(string msg)
         {
             UnityMainThreadDispatcher.Instance().Enqueue(HandleMessage(msg));
+        }
+
+        IEnumerator HandleMessage(string msg)
+        {
+            Log.Info($"HandleMessage: {msg}");
+            DispatchMessage(msg);
+            yield break;
         }
 
         private void DispatchMessage(string msg)
         {
             BaseResponse baseMsg = JsonConvert.DeserializeObject<BaseResponse>(msg);
-            Debug.Log($"DispatchMessage: {baseMsg}");
+            Log.Info($"DispatchMessage: {baseMsg}");
             MessageType type = (MessageType)Enum.Parse(typeof(MessageType), baseMsg.Type);
             switch (type)
             {
                 case MessageType.GetRooms:
-                    Debug.Log($"DispatchMessage {type} case...");
+                    Log.Info($"DispatchMessage {type} case...");
                     HandleRoomListReceived(msg);
                     break;
                 case MessageType.JoinRoom:
-                    Debug.Log($"DispatchMessage {type} case...");
+                    Log.Info($"DispatchMessage {type} case...");
                     HandleRoomJoined(msg);
                     break;
                 case MessageType.GameStarted:
-                    Debug.Log($"DispatchMessage {type} case...");
+                    Log.Info($"DispatchMessage {type} case...");
                     HandleMatchStarted(msg);
                     break;
                 case MessageType.TurnStarted:
-                    Debug.Log($"DispatchMessage {type} case...");
+                    Log.Info($"DispatchMessage {type} case...");
                     HandleTurnStarted(msg);
                     break;
                 case MessageType.CreateRoom:
@@ -359,21 +385,10 @@ namespace PitchPerfect.Networking
             }
         }
 
-        /// <summary>
-        /// Call this method to connect to the server
-        /// </summary>
-        public void ConnectToServer(string endpoint)
-        {
-           
-        }
-        /// <summary>
-        /// Method which sends data through websocket
-        /// </summary>
-        /// <param name="message">Message.</param>
         public void SendRequest(string message)
         {
-            //_socketHandler.Send(message);
-            _webGLSocketHandler.SendMessage(message);
+            if (IsConnectionOpen())
+                wsWebGL.Send(Encoding.UTF8.GetBytes(message));
         }
 
         public RoomDTO[] GetRooms()
@@ -384,11 +399,6 @@ namespace PitchPerfect.Networking
         public RoomDTO GetJoinedRoom()
         {
             return _joinedRoom;
-        }
-
-        private void OnDestroy()
-        {
-
         }
     }
 }

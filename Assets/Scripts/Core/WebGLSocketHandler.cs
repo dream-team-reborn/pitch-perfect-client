@@ -19,38 +19,38 @@ namespace PitchPerfect.Core
 
             wsWebGL.OnOpen += () =>
             {
-                Debug.Log("WS connected!");
-                Debug.Log("WS state: " + wsWebGL.GetState().ToString());
+                Log.Info("WS connected!");
+                Log.Info("WS state: " + wsWebGL.GetState().ToString());
 
             };
 
             // Add OnMessage event listener
             wsWebGL.OnMessage += (byte[] msg) =>
             {
-                Debug.Log($"Received {msg.Length} bytes");
+                Log.Info($"Received {msg.Length} bytes");
                 try
                 {
                     string stringMsg = Encoding.UTF8.GetString(msg);
-                    Debug.Log("WS received message: " + stringMsg);
+                    Log.Info("WS received message: " + stringMsg);
 
                     OnHandleMessage?.Invoke(stringMsg);
                 }
                 catch (Exception e)
                 {
-                    Debug.Log(e.StackTrace);
+                    Log.Info(e.StackTrace);
                 }
             };
 
             // Add OnError event listener
             wsWebGL.OnError += (string errMsg) =>
             {
-                Debug.Log("WS error: " + errMsg);
+                Log.Info("WS error: " + errMsg);
             };
 
             // Add OnClose event listener
             wsWebGL.OnClose += (WebSocketCloseCode code) =>
             {
-                Debug.Log("WS closed with code: " + code.ToString());
+                Log.Info("WS closed with code: " + code.ToString());
             };
 
             // Connect to the server
