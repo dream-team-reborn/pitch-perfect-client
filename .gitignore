@@ -43,5 +43,6 @@ sysinfo.txt
 # ======================================= #
 /Assets/UnityTestTools*
 Logs
-Assets/.DS_Store
 .idea
+*.DS_Store
+UserSettings/Layouts/CurrentMaximizeLayout.dwlt
