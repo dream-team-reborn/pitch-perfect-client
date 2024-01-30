@@ -64,15 +64,14 @@ namespace PitchPerfect.UI
 
             if (isTrendTab)
             {
-                SetupTrends(true);
+                SetupTrends();
             }
         }
 
         private void OnTrendsUpdated()
-        {
-            var trends = MatchDataManager.Instance.CategoryTrends;
-            
-            
+        {;
+            SetupTrends();
+            SwitchTab(true);
         }
 
         private void OnPlayerSelectedUpdated()
@@ -82,20 +81,44 @@ namespace PitchPerfect.UI
 
         private void SetupTrends(bool fakeTrends = false)
         {
-            if (fakeTrends)
+            // if (fakeTrends)
+            // {
+            //     int lineId = 0;
+            //     foreach (var line in _trendsLines)
+            //     {
+            //         for (int i = 0; i < LEVELS_X.Length; i++)
+            //         {
+            //             var x = LEVELS_X[i];
+            //             var y = LEVELS_Y[Random.Range(0, LEVELS_Y.Length)];
+            //             
+            //             line.SetPosition(i, new Vector3(x, y + LINES_OFFSET[lineId], 0f));
+            //         }
+            //
+            //         lineId++;
+            //     }
+            // }
+            // else
             {
-                int lineId = 0;
-                foreach (var line in _trendsLines)
+                var trends = MatchDataManager.Instance.CategoryTrends;
+                if (trends.Keys.Count > 0)
                 {
-                    for (int i = 0; i < LEVELS_X.Length; i++)
+                    int lineId = 0;
+                    foreach (var line in _trendsLines)
                     {
-                        var x = LEVELS_X[i];
-                        var y = LEVELS_Y[Random.Range(0, LEVELS_Y.Length)];
-                        
-                        line.SetPosition(i, new Vector3(x, y + LINES_OFFSET[lineId], 0f));
-                    }
+                        int trendKey = lineId + 1;
 
-                    lineId++;
+                        line.positionCount = trends[trendKey].Count;
+                        // if (trends[trendKey].Count > 1)
+                        {
+                            for (int i = 0; i < trends[trendKey].Count; i++)
+                            {
+                                var x = LEVELS_X[i];
+                                var y = LEVELS_Y[trends[trendKey][i]];
+                                line.SetPosition(i, new Vector3(x, y + LINES_OFFSET[lineId], 0f));
+                            }
+                        }
+                        lineId++;
+                    }
                 }
             }
         }
